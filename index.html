@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Services Authority — Central Province Driving School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --navy: #0f2744;
+            --navy-light: #1a3b61;
+            --gold: #c9a227;
+            --goldLight: #c9a227;
+            --cream: #f8f6f3;
+            --sage: #4a5d4e;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(15, 39, 68, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: var(--white);
+            color: var(--navy);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: var(--transition); }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+        .section-title { font-size: 2.25rem; color: var(--navy); margin-bottom: 0.5rem; }
+        .text-white { color: var(--white); }
+        .text-sage { color: var(--sage); }
+        .text-xl { font-size: 1.25rem; }
+        .font-bold { font-weight: 700; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .mb-6 { margin-bottom: 2.5rem; }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block;
+            padding: 0.85rem 2rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        .btn-primary { background: var(--gold); color: var(--navy); }
+        .btn-primary:hover { background: var(--goldLight); transform: translateY(-2px); }
+        .btn-secondary { background: var(--navy); color: var(--white); }
+        .btn-secondary:hover { background: var(--navy-light); }
+        .btn-outline { border-color: currentColor; }
+        .btn-outline:hover { background: rgba(255,255,255,0.1); }
+        .btn-lg { padding: 1rem 2.5rem; font-size: 1.1rem; }
+
+        /* --- NAVIGATION BAR --- */
+        .main-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--navy);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--white);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.85);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-link:hover, .nav-link.active { color: var(--gold); }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--gold);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .bar { width: 28px; height: 3px; background-color: var(--gold); border-radius: 2px; transition: var(--transition); }
+
+        @media (max-width: 768px) {
+            .mobile-toggle { display: flex; z-index: 1002; }
+            .nav-links {
+                position: fixed;
+                top: 0; right: -100%;
+                width: 70%; height: 100vh;
+                background-color: var(--navy);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2.5rem;
+                transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+                padding-top: 60px;
+            }
+            .nav-links.active { right: 0; }
+            .nav-link { font-size: 1.2rem; }
+            .mobile-toggle.active .bar:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+            .mobile-toggle.active .bar:nth-child(2) { opacity: 0; }
+            .mobile-toggle.active .bar:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+        }
+
+        /* --- UTILITIES --- */
+        .max-w-7xl { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+        .flex { display: flex; }
+        .flex-wrap { flex-wrap: wrap; }
+        .justify-center { justify-content: center; }
+        .items-center { align-items: center; }
+        .gap-4 { gap: 1rem; }
+        .text-center { text-align: center; }
+        .py-20 { padding-top: 5rem; padding-bottom: 5rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+
+        /* --- ANIMATIONS --- */
+        .animate-fade-in-up { opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s ease forwards; }
+        .stagger-1 { animation-delay: 0.2s; }
+        .stagger-2 { animation-delay: 0.4s; }
+        .stagger-3 { animation-delay: 0.6s; }
+        .stagger-4 { animation-delay: 0.8s; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        .section-reveal { opacity: 0; transform: translateY(20px); transition: all 0.8s ease-out; }
+        .section-reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- TICKER --- */
+        .announcement-bar {
+            background-color: var(--goldLight);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            z-index: 1001;
+            height: 40px;
+        }
+        .ticker-wrapper { display: flex; width: fit-content; animation: scroll-text 35s linear infinite; }
+        .announcement-bar:hover .ticker-wrapper { animation-play-state: paused; cursor: default; }
+        .ticker-content { display: inline-flex; align-items: center; white-space: nowrap; padding-right: 50px; }
+        .ticker-text { color: var(--navy); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.5px; }
+        @keyframes scroll-text { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* --- HERO --- */
+        .hero-section {
+            position: relative;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            /* Replaced pattern with the actual background image */
+            background-image: url('bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Parallax effect */
+        }
+
+        /* Deep blue gradient overlay to ensure text is readable */
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15, 39, 68, 0.55) 0%, rgba(26, 59, 97, 0.4) 50%, rgba(15, 39, 68, 0.zzzz) 100%);
+            z-index: 1;
+        }
+
+        .section-divider { width: 80px; height: 4px; background: var(--gold); margin: 0.5rem auto 1.5rem; border-radius: 2px; }
+
+        .card { background: var(--white); padding: 2.5rem 2rem; border-radius: 8px; box-shadow: var(--shadow-sm); border-top: 4px solid transparent; transition: var(--transition); }
+        .card.card-hover:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); border-top-color: var(--gold); }
+
+        /* =============================================
+           FEEDBACK SECTION STYLES
+           ============================================= */
+        .feedback-section {
+            background: linear-gradient(160deg, #0f2744 0%, #1a3b61 60%, #0f2744 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 5rem 1rem;
+        }
+
+        .feedback-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(201, 162, 39, 0.07) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+        }
+
+        .feedback-section::after {
+            content: '';
+            position: absolute;
+            top: -120px; right: -120px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(201,162,39,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .feedback-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feedback-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 4rem;
+            align-items: start;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 900px) {
+            .feedback-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+        }
+
+        /* Left: Summary Panel */
+        .feedback-summary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(201,162,39,0.2);
+            border-radius: 16px;
+            padding: 2rem 1.75rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .summary-score {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .score-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .score-max {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.4);
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .summary-stars { display: flex; justify-content: center; gap: 6px; margin-bottom: 0.5rem; }
+
+        .summary-star {
+            font-size: 1.6rem;
+            color: rgba(255,255,255,0.15);
+            transition: color 0.3s;
+        }
+        .summary-star.filled { color: var(--gold); }
+
+        .total-count {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.875rem;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        /* Star breakdown bars */
+        .breakdown-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.6rem;
+        }
+
+        .breakdown-label {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.8rem;
+            width: 32px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .breakdown-bar-track {
+            flex: 1;
+            height: 7px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .breakdown-bar-fill {
+            height: 100%;
+            background: var(--gold);
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .breakdown-count {
+            color: rgba(255,255,255,0.45);
+            font-size: 0.78rem;
+            width: 20px;
+            text-align: left;
+            flex-shrink: 0;
+        }
+
+        .view-all-btn {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            border: 1.5px solid rgba(201,162,39,0.5);
+            border-radius: 6px;
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+        }
+        .view-all-btn:hover { background: rgba(201,162,39,0.1); border-color: var(--gold); }
+
+        /* Right: Form */
+        .feedback-form-card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .feedback-form-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--white);
+            margin-bottom: 0.4rem;
+        }
+
+        .feedback-form-card p {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .form-group { margin-bottom: 1.25rem; }
+
+        .form-group label {
+            display: block;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            background: rgba(255,255,255,0.07);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--white);
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--gold);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 0 3px rgba(201,162,39,0.12);
+        }
+
+        .form-group select option { background: var(--navy); color: var(--white); }
+        .form-group textarea { resize: vertical; min-height: 110px; }
+
+        /* Star Rating Input */
+        .star-rating-input {
+            display: flex;
+            gap: 8px;
+            margin-top: 0.25rem;
+        }
+
+        .star-btn {
+            font-size: 2rem;
+            color: rgba(255,255,255,0.15);
+            cursor: pointer;
+            transition: color 0.2s, transform 0.15s;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .star-btn:hover,
+        .star-btn.selected,
+        .star-btn.hovered { color: var(--gold); transform: scale(1.15); }
+
+        .star-label {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+            margin-left: 0.5rem;
+            align-self: center;
+        }
+
+        .submit-feedback-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--gold);
+            color: var(--navy);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+
+        .submit-feedback-btn:hover { background: var(--goldLight); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,162,39,0.3); }
+        .submit-feedback-btn:active { transform: translateY(0); }
+
+        /* Success message */
+        .feedback-success {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .feedback-success .success-icon {
+            width: 64px; height: 64px;
+            background: rgba(201,162,39,0.15);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+        }
+        .feedback-success h4 { color: var(--gold); font-size: 1.4rem; margin-bottom: 0.5rem; }
+        .feedback-success p { color: rgba(255,255,255,0.6); font-size: 0.95rem; }
+
+        .mini-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-left: 3px solid var(--gold);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            transition: var(--transition);
+        }
+        .mini-card:hover { background: rgba(255,255,255,0.07); }
+
+        .mini-card-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 0.4rem; }
+        .mini-card-text { color: rgba(255,255,255,0.7); font-size: 0.875rem; line-height: 1.5; margin-bottom: 0.5rem; font-style: italic; }
+        .mini-card-meta { display: flex; justify-content: space-between; align-items: center; }
+        .mini-card-name { color: rgba(255,255,255,0.5); font-size: 0.78rem; font-weight: 600; }
+        .mini-card-date { color: rgba(255,255,255,0.3); font-size: 0.75rem; }
+
+        /* --- FOOTER --- */
+        footer { background-color: var(--navy); color: var(--white); text-align: center; padding: 3rem 1rem; border-top: 4px solid var(--gold); }
+
+        /* --- TOAST --- */
+        #toast {
+            visibility: hidden; min-width: 250px;
+            background-color: var(--navy); color: #fff;
+            text-align: center; border-radius: 4px;
+            padding: 16px; position: fixed; z-index: 2000;
+            left: 50%; bottom: 30px; transform: translateX(-50%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-left: 5px solid var(--gold);
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    </style>
+</head>
+<body>
+
+<!-- Announcement Ticker -->
+<div class="announcement-bar">
+    <div class="ticker-wrapper" id="tickerWrapper">
+        <div class="ticker-content">
+            <span class="ticker-text">
+                New batch registration open &nbsp;|&nbsp; Written exam schedule updated &nbsp;|&nbsp; Practice sessions available weekdays &nbsp;|&nbsp; Contact 081 2424372 &nbsp;|&nbsp; Check your hours in the Student Portal
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- NAVIGATION BAR -->
+<nav class="main-nav">
+    <div class="nav-container">
+        <a href="index.html" class="brand-logo">
+            <img src="https://tsa.cp.gov.lk/live_tracking/img/cptsa_logo.png"
+                 alt="CPTSA Logo"
+                 style="height:45px;width:auto;object-fit:contain;">
+            <span>CPTSA</span>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link active">Home</a></li>
+            <li><a href="services.html" class="nav-link">Services</a></li>
+            <li><a href="admin.html" class="nav-link">Admin Portal</a></li>
+            <li><a href="instructor.html" class="nav-link">Instructors</a></li>
+            <li><a href="announcements.html" class="nav-link">Announcements</a></li>
+            <li><a href="contact.html" class="nav-link">Contact Us</a></li>
+            <li><a href="about.html" class="nav-link">About</a></li>
+        </ul>
+
+        <button class="mobile-toggle" aria-label="Toggle Navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </div>
+</nav>
+
+<!-- Hero Section with Custom Background Image -->
+<section class="hero-section">
+    <!-- Deep Blue Overlay -->
+    <div class="hero-overlay"></div>
+    
+    <div class="max-w-7xl" style="position:relative;z-index:2;text-align:center;width:100%; padding: 4rem 1rem;">
+        <h1 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:white;margin-bottom:0.5rem;" class="animate-fade-in-up">Transport Services Authority</h1>
+        <h1 style="font-size:clamp(1.8rem,4.5vw,3rem);font-weight:700;color:white;margin-bottom:0.5rem;" class="animate-fade-in-up">Driving Training School</h1>
+        <h2 style="font-size:clamp(1.3rem,3vw,2rem);color:var(--gold);margin-bottom:0.5rem;" class="animate-fade-in-up stagger-1">Central Province</h2>
+        <h3 style="font-size:clamp(1rem,2.5vw,1.5rem);color:rgba(255,255,255,0.85);margin-bottom:0.5rem;" class="animate-fade-in-up stagger-2">ප්‍රවාහන සේවා අධිකාරිය - මධ්‍යම පළාත</h3>
+        <h3 style="font-size:clamp(1rem,2.5vw,1.5rem);color:rgba(255,255,255,0.85);margin-bottom:2.5rem;" class="animate-fade-in-up stagger-2">රියදුරු පුහුණු පාසල</h3>
+        <p style="color:rgba(255,255,255,0.75);max-width:42rem;margin:0 auto 2.5rem;font-size:1.1rem;line-height:1.7;" class="animate-fade-in-up stagger-3">
+            රාජ්‍ය ආයතනයක් සතු රියදුරු පාසලකින් විනයගරුක රියදුරෙකු ලෙස රියදුරු බලපත්‍රයක් ලබා ගැනීමට
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 animate-fade-in-up stagger-4">
+            <a href="student_access.html" class="btn btn-outline btn-lg" style="color:rgb(244, 194, 67);border-color:white;">Sign In Before Registration</a>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Stats -->
+<section style="background:white;padding:3rem 1rem;box-shadow:0 4px 20px rgba(15,39,68,0.06);">
+    <div class="max-w-7xl" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem;text-align:center;">
+        <div class="section-reveal">
+            <div style="font-size:2.5rem;font-weight:700;color:var(--gold);">2014</div>
+            <div style="color:var(--sage);font-size:0.9rem;margin-top:0.25rem;">Established</div>
+        </div>
+        <div class="section-reveal">
+            <div style="font-size:2.5rem;font-weight:700;color:var(--gold);">D.S.860</div>
+            <div style="color:var(--sage);font-size:0.9rem;margin-top:0.25rem;">Registration Number</div>
+        </div>
+        <div class="section-reveal">
+            <div style="font-size:2.5rem;font-weight:700;color:var(--gold);">3</div>
+            <div style="color:var(--sage);font-size:0.9rem;margin-top:0.25rem;">Vehicle Categories</div>
+        </div>
+        <div class="section-reveal">
+            <div style="font-size:2.5rem;font-weight:700;color:var(--gold);">17hrs</div>
+            <div style="color:var(--sage);font-size:0.9rem;margin-top:0.25rem;">Maximum Session Hours</div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20" style="background:var(--cream);text-align:center;">
+    <div class="max-w-2xl mx-auto px-4 section-reveal">
+        <h2 class="section-title mb-4">Ready to Get Your License?</h2>
+        <div class="section-divider"></div>
+        <p class="text-sage mb-6" style="font-size:1.1rem;line-height:1.7;">Sign in to the student portal to book your time slots, track your hours and manage your registration.</p>
+        <a href="students.html" class="btn btn-primary btn-lg">Go to Student Portal</a>
+    </div>
+</section>
+
+<!-- =============================================
+     FEEDBACK SECTION
+     ============================================= -->
+<section class="feedback-section section-reveal" id="feedback">
+    <div class="feedback-inner">
+        <!-- Header -->
+        <div style="text-align:center;margin-bottom:0.25rem;">
+            <p style="color:var(--gold);font-weight:600;font-size:0.85rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem;">What Our Students Say</p>
+            <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.5rem);color:var(--white);margin-bottom:0.5rem;">Share Your Experience</h2>
+            <div class="section-divider"></div>
+            <p style="color:rgba(255,255,255,0.5);max-width:500px;margin:0 auto;font-size:0.95rem;">Your feedback helps us improve our services and assists future students in making informed decisions.</p>
+        </div>
+
+        <div class="feedback-layout">
+            <!-- Left: Rating Summary -->
+            <div class="feedback-summary section-reveal">
+                <div class="summary-score">
+                    <div class="score-number" id="avgScore">—</div>
+                    <span class="score-max">out of 5</span>
+                    <div class="summary-stars" id="summaryStars">
+                        <span class="summary-star">★</span>
+                        <span class="summary-star">★</span>
+                        <span class="summary-star">★</span>
+                        <span class="summary-star">★</span>
+                        <span class="summary-star">★</span>
+                    </div>
+                    <span class="total-count" id="totalCount">No reviews yet</span>
+                </div>
+
+                <!-- Breakdown bars -->
+                <div id="breakdownBars">
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">5 ★</span>
+                        <div class="breakdown-bar-track"><div class="breakdown-bar-fill" id="bar5" style="width:0%"></div></div>
+                        <span class="breakdown-count" id="cnt5">0</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">4 ★</span>
+                        <div class="breakdown-bar-track"><div class="breakdown-bar-fill" id="bar4" style="width:0%"></div></div>
+                        <span class="breakdown-count" id="cnt4">0</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">3 ★</span>
+                        <div class="breakdown-bar-track"><div class="breakdown-bar-fill" id="bar3" style="width:0%"></div></div>
+                        <span class="breakdown-count" id="cnt3">0</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">2 ★</span>
+                        <div class="breakdown-bar-track"><div class="breakdown-bar-fill" id="bar2" style="width:0%"></div></div>
+                        <span class="breakdown-count" id="cnt2">0</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span class="breakdown-label">1 ★</span>
+                        <div class="breakdown-bar-track"><div class="breakdown-bar-fill" id="bar1" style="width:0%"></div></div>
+                        <span class="breakdown-count" id="cnt1">0</span>
+                    </div>
+                </div>
+
+                <a href="feedback.html" class="view-all-btn">View All Reviews →</a>
+            </div>
+
+            <!-- Right: Feedback Form -->
+            <div class="feedback-form-card section-reveal">
+                <h3>Leave a Review</h3>
+                <p>Your honest feedback is greatly appreciated.</p>
+
+                <div id="feedbackFormWrap">
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" id="fbName" placeholder="e.g. Kamal Perera" maxlength="60">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="fbCategory">
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Instructor Quality">Instructor Quality</option>
+                            <option value="Vehicle Condition">Vehicle Condition</option>
+                            <option value="Schedule & Flexibility">Schedule & Flexibility</option>
+                            <option value="Office & Admin">Office & Administration</option>
+                            <option value="Overall Experience">Overall Experience</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <div style="display:flex;align-items:center;gap:4px;">
+                            <div class="star-rating-input" id="starInput">
+                                <button class="star-btn" data-val="1" type="button">★</button>
+                                <button class="star-btn" data-val="2" type="button">★</button>
+                                <button class="star-btn" data-val="3" type="button">★</button>
+                                <button class="star-btn" data-val="4" type="button">★</button>
+                                <button class="star-btn" data-val="5" type="button">★</button>
+                            </div>
+                            <span class="star-label" id="starLabel">Tap to rate</span>
+                        </div>
+                        <input type="hidden" id="fbRating" value="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Your Feedback</label>
+                        <textarea id="fbMessage" placeholder="Tell us about your experience at CPTSA Driving School..." maxlength="500"></textarea>
+                    </div>
+
+                    <button class="submit-feedback-btn" onclick="submitFeedback()">Submit Feedback</button>
+                </div>
+
+                <!-- Success State -->
+                <div class="feedback-success" id="feedbackSuccess">
+                    <div class="success-icon">✓</div>
+                    <h4>Thank You!</h4>
+                    <p>Your feedback has been submitted successfully and will be visible to all visitors.</p>
+                    <button class="btn btn-outline" onclick="resetFeedbackForm()" style="color:var(--gold);border-color:rgba(201,162,39,0.4);margin-top:1.25rem;font-size:0.9rem;">Submit Another Review</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <p style="margin-bottom:0.5rem;font-weight:600;font-size:1.1rem;">Transport Services Authority — Central Province Driving Training School</p>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.875rem;">Reg: D.S.860 &nbsp;|&nbsp; Tel: 081 2424372 &nbsp;|&nbsp; Kandy, Sri Lanka</p>
+    <p style="margin-top:1rem;color:rgba(255,255,255,0.4);font-size:0.8rem;">&copy; 2026 Transport Services Authority, Central Province</p>
+</footer>
+
+<div id="toast" role="alert"><span id="toastMessage"></span></div>
+
+<script src="api_client.js"></script>
+<script>
+    /* ---- Navigation ---- */
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        const links = document.querySelectorAll('.nav-link');
+
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            const expanded = mobileToggle.getAttribute('aria-expanded') === 'true';
+            mobileToggle.setAttribute('aria-expanded', !expanded);
+        });
+
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        const currentPath = window.location.pathname.split('/').pop();
+        links.forEach(link => {
+            if(link.getAttribute('href') === currentPath) link.classList.add('active');
+            else if (currentPath === '' && link.getAttribute('href') === 'index.html') link.classList.add('active');
+        });
+    });
+
+    /* ---- Ticker ---- */
+    function initTicker() {
+        const tickerWrapper = document.getElementById('tickerWrapper');
+        const originalContent = tickerWrapper.innerHTML;
+        tickerWrapper.innerHTML = originalContent + originalContent + originalContent + originalContent;
+    }
+    initTicker();
+
+    /* ---- Scroll Reveal ---- */
+    function initScrollReveal() {
+        var els = document.querySelectorAll('.section-reveal');
+        var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) { if(e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+        }, { threshold: 0.1 });
+        els.forEach(function(el) { io.observe(el); });
+    }
+    document.addEventListener('DOMContentLoaded', initScrollReveal);
+
+    /* ---- Toast ---- */
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        document.getElementById('toastMessage').textContent = msg;
+        t.className = 'show';
+        setTimeout(function(){ t.className = t.className.replace('show',''); }, 3200);
+    }
+
+    /* ===================================================
+       FEEDBACK SYSTEM
+       =================================================== */
+    var selectedRating = 0;
+    var starLabels = ['','Poor','Fair','Good','Very Good','Excellent'];
+
+    /* Star input interactions */
+    var starBtns = document.querySelectorAll('.star-btn');
+    starBtns.forEach(function(btn) {
+        btn.addEventListener('mouseenter', function() {
+            var val = parseInt(this.dataset.val);
+            starBtns.forEach(function(b) {
+                b.classList.toggle('hovered', parseInt(b.dataset.val) <= val);
+            });
+        });
+        btn.addEventListener('mouseleave', function() {
+            starBtns.forEach(function(b) { b.classList.remove('hovered'); });
+        });
+        btn.addEventListener('click', function() {
+            selectedRating = parseInt(this.dataset.val);
+            document.getElementById('fbRating').value = selectedRating;
+            document.getElementById('starLabel').textContent = starLabels[selectedRating];
+            starBtns.forEach(function(b) {
+                b.classList.toggle('selected', parseInt(b.dataset.val) <= selectedRating);
+            });
+        });
+    });
+
+    /* ── Feedback: API-backed ────────────────────────────── */
+    function updateSummaryStars(avg) {
+        var stars = document.querySelectorAll('.summary-star');
+        stars.forEach(function(s, i) { s.classList.toggle('filled', i < Math.round(avg)); });
+    }
+
+    async function updateSummary() {
+        try {
+            var s = await CPTSA.Feedback.summary();
+            if (s.total === 0) {
+                document.getElementById('avgScore').textContent = '—';
+                document.getElementById('totalCount').textContent = 'No reviews yet';
+                [1,2,3,4,5].forEach(function(n) {
+                    document.getElementById('bar'+n).style.width = '0%';
+                    document.getElementById('cnt'+n).textContent = '0';
+                });
+                updateSummaryStars(0);
+                return;
+            }
+            document.getElementById('avgScore').textContent = s.average;
+            document.getElementById('totalCount').textContent = s.total + ' review' + (s.total === 1 ? '' : 's');
+            [1,2,3,4,5].forEach(function(n) {
+                var pct = Math.round(((s.counts[n]||0) / s.total) * 100);
+                document.getElementById('bar'+n).style.width = pct + '%';
+                document.getElementById('cnt'+n).textContent = s.counts[n] || 0;
+            });
+            updateSummaryStars(parseFloat(s.average));
+        } catch(e) {
+            console.warn('Feedback summary failed:', e.message);
+        }
+    }
+
+    async function submitFeedback() {
+        var name     = document.getElementById('fbName').value.trim();
+        var category = document.getElementById('fbCategory').value;
+        var rating   = parseInt(document.getElementById('fbRating').value);
+        var message  = document.getElementById('fbMessage').value.trim();
+
+        if (!name)                    { showToast('Please enter your name.'); return; }
+        if (!category)                { showToast('Please select a category.'); return; }
+        if (!rating || rating < 1)    { showToast('Please select a star rating.'); return; }
+        if (!message || message.length < 2) { showToast('Please write a feedback.'); return; }
+
+        try {
+            await CPTSA.Feedback.submit({ name, category, rating, message });
+            await updateSummary();
+            document.getElementById('feedbackFormWrap').style.display = 'none';
+            document.getElementById('feedbackSuccess').style.display = 'block';
+        } catch(e) {
+            showToast('Submit failed: ' + e.message);
+        }
+    }
+
+    function resetFeedbackForm() {
+        document.getElementById('fbName').value     = '';
+        document.getElementById('fbCategory').value = '';
+        document.getElementById('fbMessage').value  = '';
+        selectedRating = 0;
+        document.getElementById('fbRating').value   = 0;
+        document.getElementById('starLabel').textContent = 'Tap to rate';
+        starBtns.forEach(function(b) { b.classList.remove('selected','hovered'); });
+        document.getElementById('feedbackFormWrap').style.display = 'block';
+        document.getElementById('feedbackSuccess').style.display  = 'none';
+    }
+
+    /* Init */
+    document.addEventListener('DOMContentLoaded', function() {
+        updateSummary();
+    });
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

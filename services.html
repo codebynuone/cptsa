@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services — Transport Services Authority</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav.js"></script>
+</head>
+<body>
+<div id="navbar-container"></div>
+
+<section class="hero-gradient pattern-overlay" style="padding:5rem 1rem;text-align:center;position:relative;">
+    <div style="position:absolute;inset:0;background:rgba(15,39,68,0.9);"></div>
+    <div style="position:relative;z-index:2;">
+        <h1 style="font-size:2.8rem;color:white;font-weight:700;" class="animate-fade-in-up">Our Services</h1>
+        <p style="color:var(--gold);font-size:1.1rem;margin-top:0.75rem;" class="animate-fade-in-up stagger-1">Everything you need to get your driving license</p>
+        <div style="margin-top:1.5rem;" class="animate-fade-in-up stagger-2">
+            <a href="index.html" class="btn btn-outline btn-lg" style="color:white;border-color:white;">Back to Home</a>
+        </div>
+    </div>
+</section>
+
+<section class="py-20 max-w-7xl mx-auto px-4">
+
+    <div class="grid-3 mb-6">
+        <div class="card card-hover section-reveal" style="text-align:center;">
+            <div style="width:80px;height:80px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+                <svg style="width:40px;height:40px;" fill="none" stroke="#c9a227" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Written Exam Preparation</h3>
+            <p class="text-sage">Comprehensive theoretical knowledge covering road rules, traffic signs, and regulations.</p>
+        </div>
+        <div class="card card-hover section-reveal" style="text-align:center;">
+            <div style="width:80px;height:80px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+                <svg style="width:40px;height:40px;" fill="none" stroke="#0f2744" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Practical Driving Training</h3>
+            <p class="text-sage">Hands-on driving practice with certified instructors — Bike, Van, and Three-Wheeler.</p>
+        </div>
+        <div class="card card-hover section-reveal" style="text-align:center;">
+            <div style="width:80px;height:80px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+                <svg style="width:40px;height:40px;" fill="none" stroke="#c9a227" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">License Issuance</h3>
+            <p class="text-sage">Official driving license upon successful completion of all requirements and examinations.</p>
+        </div>
+    </div>
+
+    <!-- Timetable Info -->
+    <div class="card section-reveal mb-6">
+    <div class="main-header">
+        <h3 class="text-2xl font-bold">Timetable And Slot Booking</h3>
+        <p>Diagnostic Check: If you see red text below, read it to fix the image path.</p>
+    </div>
+
+    <div class="grid-3">
+        <!-- Card A: Bike -->
+        <div class="category-card">
+            <!-- DIAGNOSTIC FALLBACK: The onerror attribute will print the exact path the browser is looking for -->
+            <img 
+                src="bike.png" 
+                alt="Motorcycle Training" 
+                class="card-img"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+            >
+            <div class="error-msg" style="display:none; padding:1rem; background:#fee2e2; color:#991b1b; font-size:0.8rem; text-align:center; height:200px; box-sizing:border-box;">
+                Failed to load bike.png<br>Check if file is exactly named <strong>bike.png</strong> (lowercase) inside the <strong>photos</strong> folder.
+            </div>
+            
+            <div class="card-content">
+                <div class="category-badge">Category A</div>
+                <h4 class="card-title">Bike Training</h4>
+                <div class="info-row">
+                    <span class="label">Daily Capacity</span>
+                    <span class="value">10 Students</span>
+                </div>
+                <p class="description">Maximum slots available throughout training days.</p>
+            </div>
+        </div>
+
+        <!-- Card B: Van -->
+        <div class="category-card">
+            <img 
+                src="van.png" 
+                alt="Van Training" 
+                class="card-img"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+            >
+            <div class="error-msg" style="display:none; padding:1rem; background:#fee2e2; color:#991b1b; font-size:0.8rem; text-align:center; height:200px; box-sizing:border-box;">
+                Failed to load van.png<br>Check if file is exactly named <strong>van.png</strong> (lowercase) inside the <strong>photos</strong> folder.
+            </div>
+            
+            <div class="card-content">
+                <div class="category-badge">Category B</div>
+                <h4 class="card-title">Van Training</h4>
+                <div class="info-row">
+                    <span class="label">Daily Capacity</span>
+                    <span class="value">8 Students</span>
+                </div>
+                <ul class="schedule-list">
+                    <li><span class="time">07:00 – 10:00</span> <span class="seats">4 Seats</span></li>
+                    <li><span class="time">02:00 – 05:00</span> <span class="seats">4 Seats</span></li>
+                    <li><span class="time walkin">10:30 – 11:30</span> <span class="badge">Walk-in</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card B1: Three-Wheeler -->
+        <div class="category-card">
+            <img 
+                src="tw.png" 
+                alt="Three-Wheeler Training" 
+                class="card-img"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+            >
+            <div class="error-msg" style="display:none; padding:1rem; background:#fee2e2; color:#991b1b; font-size:0.8rem; text-align:center; height:200px; box-sizing:border-box;">
+                Failed to load tw.png<br>Check if file is exactly named <strong>tw.png</strong> (lowercase) inside the <strong>photos</strong> folder.
+            </div>
+            
+            <div class="card-content">
+                <div class="category-badge">Category B1</div>
+                <h4 class="card-title">Three-Wheeler</h4>
+                <div class="info-row">
+                    <span class="label">Daily Capacity</span>
+                    <span class="value">8 Students</span>
+                </div>
+                <ul class="schedule-list">
+                    <li><span class="time">07:00 – 10:00</span> <span class="seats">4 Seats</span></li>
+                    <li><span class="time">02:00 – 05:00</span> <span class="seats">4 Seats</span></li>
+                    <li><span class="time walkin">10:30 – 11:30</span> <span class="badge">Walk-in</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning Box -->
+    <div class="alert-box">
+        <svg class="alert-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <div class="alert-content">
+            <strong>Important:</strong> Each student has a maximum of <strong>17 hours</strong>. If this limit is exceeded, the student must pay again and restart with 10 hours. Time is updated manually by the admin.
+        </div>
+    </div>
+</div>
+
+<style>
+    .card { background: #ffffff; border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9; }
+    .main-header h3 { color: var(--navy, #1e293b); margin-bottom: 0.5rem; }
+    .main-header p { color: var(--sage, #64748b); max-width: 600px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem; }
+    .category-card { background: #ffffff; border-radius: 1rem; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; }
+    .card-img { width: 100%; height: 200px; object-fit: cover; object-position: center; display: block; }
+    .card-content { padding: 1.5rem; background-color: #ffffff; flex-grow: 1; display: flex; flex-direction: column; }
+    .category-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #d97706; margin-bottom: 0.5rem; }
+    .card-title { font-size: 1.25rem; font-weight: 700; color: var(--navy, #1e293b); margin: 0 0 1rem 0; }
+    .info-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid #f1f5f9; }
+    .info-row .label { font-size: 0.85rem; color: #64748b; font-weight: 500; }
+    .info-row .value { font-size: 1rem; font-weight: 700; color: var(--navy, #1e293b); }
+    .description { font-size: 0.9rem; color: #64748b; line-height: 1.5; margin: 0; }
+    .schedule-list { list-style: none; padding: 0; margin: 0; }
+    .schedule-list li { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px dashed #e2e8f0; font-size: 0.9rem; }
+    .schedule-list li:last-child { border-bottom: none; }
+    .time { color: #334155; font-weight: 500; }
+    .seats { background-color: #f1f5f9; color: #64748b; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+    .walkin { color: #0f766e; font-weight: 600; }
+    .badge { background-color: #ccfbf1; color: #0f766e; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; }
+    .alert-box { margin-top: 2.5rem; background-color: #fffbeb; border: 1px solid #fcd34d; border-left: 4px solid #f59e0b; border-radius: 0.5rem; padding: 1rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; }
+    .alert-icon { color: #d97706; flex-shrink: 0; margin-top: 2px; }
+    .alert-content { color: #92400e; font-size: 0.95rem; line-height: 1.5; }
+    .alert-content strong { color: #78350f; }
+</style>
+
+    <!-- Fee Structure -->
+    <div id="feeSection" class="section-reveal mb-6" style="display:none;">
+        <h3 class="text-2xl font-bold mb-4" style="color:var(--navy);">💰 Fee Structure</h3>
+        <div style="overflow-x:auto;border:1px solid var(--border);border-radius:.5rem;box-shadow:0 2px 4px rgba(0,0,0,.05);">
+            <table style="width:100%;border-collapse:collapse;background:#fff;min-width:600px;">
+                <thead>
+                    <tr style="background:var(--navy);color:#fff;text-align:left;">
+                        <th style="padding:1rem;">Vehicle Type</th>
+                        <th style="padding:1rem;">Total Amount</th>
+                        <th style="padding:1rem;">Installment</th>
+                        <th style="padding:1rem;">Installments</th>
+                        <th style="padding:1rem;">Stamp Duty</th>
+                    </tr>
+                </thead>
+                <tbody id="feeTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Documents -->
+    <div class="card section-reveal">
+        <h3 class="text-2xl font-bold mb-4" style="color:var(--navy);">📂 Documents</h3>
+        <div id="publicDocs" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;"></div>
+        <p id="noDocsMsg" class="text-sage" style="display:none;">No documents available. Check back later.</p>
+        <div id="docsLoading" class="text-sage">Loading documents…</div>
+    </div>
+
+</section>
+
+<footer>
+    <p style="font-weight:600;">Transport Services Authority — Central Province Driving School</p>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.875rem;margin-top:0.5rem;">Reg: D.S.860 &nbsp;|&nbsp; Tel: 081 2424372</p>
+    <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin-top:1rem;">&copy; 2026 Transport Services Authority</p>
+</footer>
+
+<div id="toast"><span id="toastMessage"></span></div>
+<script src="api_client.js"></script>
+<script>
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function initScrollReveal(){
+    var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+    },{threshold:0.1});
+    document.querySelectorAll('.section-reveal').forEach(function(el){io.observe(el);});
+}
+
+document.addEventListener('DOMContentLoaded', async function(){
+    initScrollReveal();
+
+    // Load fees
+    try {
+        var fees = await CPTSA.Fees.list();
+        if(fees.length){
+            document.getElementById('feeSection').style.display='block';
+            document.getElementById('feeTableBody').innerHTML = fees.map(function(f){
+                return '<tr style="border-bottom:1px solid #eee;" onmouseover="this.style.background=\'#f9f7f2\'" onmouseout="this.style.background=\'white\'">'
+                    +'<td style="padding:1rem;font-weight:600;">'+escHtml(f.vehicle_type)+'</td>'
+                    +'<td style="padding:1rem;color:var(--gold);font-weight:700;">'+escHtml(f.total_amount)+'</td>'
+                    +'<td style="padding:1rem;color:var(--sage);">'+escHtml(f.installment_fee||'—')+'</td>'
+                    +'<td style="padding:1rem;color:var(--sage);">'+escHtml(f.installments||'—')+'</td>'
+                    +'<td style="padding:1rem;color:var(--sage);">'+escHtml(f.stamp_duty||'—')+'</td>'
+                    +'</tr>';
+            }).join('');
+        }
+    } catch(e){ console.warn('Fees load failed:', e.message); }
+
+    // Load documents
+    document.getElementById('docsLoading').style.display='none';
+    try {
+        var docs = await CPTSA.Documents.list();
+        var container = document.getElementById('publicDocs');
+        if(!docs.length){
+            document.getElementById('noDocsMsg').style.display='block';
+        } else {
+            container.innerHTML = docs.map(function(d){
+                return '<div style="border:1px solid var(--border);border-radius:.75rem;padding:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">'
+                    +'<div style="display:flex;align-items:center;gap:.75rem;">'
+                    +'<svg style="width:24px;height:24px;" fill="none" stroke="#c9a227" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>'
+                    +'<span style="font-weight:600;">'+escHtml(d.name)+'</span></div>'
+                    +'<a href="'+CPTSA.Documents.downloadUrl(d.id)+'" class="btn btn-primary btn-sm">Download</a>'
+                    +'</div>';
+            }).join('');
+        }
+    } catch(e){
+        document.getElementById('noDocsMsg').textContent='Failed to load documents.';
+        document.getElementById('noDocsMsg').style.display='block';
+    }
+});
+</script>
+</body>
+</html>

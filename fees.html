@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Fees — Transport Services Authority</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--navy:#0f2744;--gold:#c9a227;--cream:#f9f7f2;--sage:#4a5d4e;--white:#ffffff;--border:#e5e7eb}
+        body{font-family:'Source Sans Pro',sans-serif;background:var(--cream);color:var(--navy);margin:0;padding-bottom:4rem}
+        h1,h2,h3{font-family:'Playfair Display',serif}
+        .container{max-width:1000px;margin:0 auto;padding:0 1rem}
+        .admin-header{background:var(--navy);color:#fff;padding:2rem 0;text-align:center;margin-bottom:2rem}
+        .admin-header h1{margin:0;font-size:2rem}
+        .card{background:#fff;border-radius:.75rem;padding:2rem;box-shadow:0 4px 6px -1px rgba(0,0,0,.1);margin-bottom:2rem;border-top:4px solid var(--gold)}
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+        @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+        .form-group{margin-bottom:1rem}
+        .form-group label{display:block;margin-bottom:.5rem;font-weight:600;color:var(--navy)}
+        .form-group input,.form-group select{width:100%;padding:.75rem;border:1px solid var(--border);border-radius:.5rem;font-family:inherit;font-size:1rem;box-sizing:border-box}
+        .form-group input:focus{outline:2px solid var(--gold);border-color:transparent}
+        .btn{display:inline-flex;align-items:center;justify-content:center;padding:.75rem 1.5rem;border-radius:.5rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;text-decoration:none;font-size:1rem}
+        .btn-primary{background:var(--navy);color:#fff}.btn-primary:hover{background:#1a3a63}
+        .btn-danger{background:#dc2626;color:#fff;padding:.4rem .8rem;font-size:.85rem}
+        .btn-full{width:100%}
+        .btn-sm-back{background:var(--gold);color:var(--navy);padding:.4rem .9rem;font-size:.85rem;font-weight:700;border-radius:.4rem;text-decoration:none;display:inline-block;margin-bottom:1rem}
+        .fee-list{display:grid;gap:1rem}
+        .fee-item{background:#fff;border:1px solid var(--border);border-radius:.5rem;padding:1rem;display:flex;justify-content:space-between;align-items:center}
+        .fee-info h4{margin:0 0 .5rem;font-size:1.1rem;color:var(--navy)}
+        .fee-info p{margin:.25rem 0;font-size:.9rem;color:#555}
+        .fee-info strong{color:var(--gold)}
+        #toast{visibility:hidden;min-width:250px;background:#333;color:#fff;text-align:center;border-radius:4px;padding:16px;position:fixed;z-index:1000;left:50%;bottom:30px;transform:translateX(-50%);opacity:0;transition:opacity .3s,bottom .3s}
+        #toast.show{visibility:visible;opacity:1;bottom:50px}
+    </style>
+</head>
+<body>
+<div class="admin-header">
+    <div class="container">
+        <h1>Admin: Fee Management</h1>
+    </div>
+</div>
+
+<div id="authCheck" style="padding:2rem;text-align:center;font-size:1.2rem;color:var(--sage);">Verifying access…</div>
+
+<div id="portalContent" style="display:none;">
+    <div class="container">
+        <a href="admin.html" class="btn-sm-back">← Admin Portal</a>
+
+        <div class="card">
+            <h2 style="margin-top:0;">Add / Update Fee Structure</h2>
+            <form id="feeForm" onsubmit="submitFee(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Vehicle Type (e.g. 🏍️ Bike Category A)</label>
+                        <input type="text" id="vehicleType" placeholder="Enter name or use emojis…" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Amount</label>
+                        <input type="text" id="totalAmount" placeholder="e.g. Rs. 15,000" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Installment Payment (Basic Fee)</label>
+                        <input type="text" id="installmentFee" placeholder="e.g. Rs. 5,000">
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Installments</label>
+                        <input type="text" id="installments" placeholder="e.g. 3 Months / Weekly">
+                    </div>
+                    <div class="form-group">
+                        <label>Stamp Duty</label>
+                        <input type="text" id="stampDuty" placeholder="e.g. Rs. 50">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Save Fee Structure</button>
+            </form>
+        </div>
+
+        <h3>Current Fee Structures</h3>
+        <div id="feeList" class="fee-list"></div>
+    </div>
+</div>
+
+<div id="toast"><span id="toastMsg"></span></div>
+<script src="api_client.js"></script>
+<script>
+function showToast(msg) {
+    var t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = 'show';
+    setTimeout(() => { t.className = t.className.replace('show',''); }, 3000);
+}
+
+function escHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function renderFees() {
+    var c = document.getElementById('feeList');
+    try {
+        var fees = await CPTSA.Fees.list();
+        c.innerHTML = fees.length
+            ? fees.map(f =>
+                `<div class="fee-item">
+                    <div class="fee-info">
+                        <h4>${escHtml(f.vehicle_type)}</h4>
+                        <p><strong>Total:</strong> ${escHtml(f.total_amount)}</p>
+                        <p><small>Basic: ${escHtml(f.installment_fee)} | Installments: ${escHtml(f.installments)} | Stamp: ${escHtml(f.stamp_duty)}</small></p>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteFee(${f.id})">Delete</button>
+                </div>`
+            ).join('')
+            : '<p style="text-align:center;color:#666;">No fees added yet.</p>';
+    } catch(e) {
+        c.innerHTML = `<p style="color:red;">Failed to load: ${e.message}</p>`;
+    }
+}
+
+async function submitFee(e) {
+    e.preventDefault();
+    var data = {
+        vehicle_type:    document.getElementById('vehicleType').value.trim(),
+        total_amount:    document.getElementById('totalAmount').value.trim(),
+        installment_fee: document.getElementById('installmentFee').value.trim(),
+        installments:    document.getElementById('installments').value.trim(),
+        stamp_duty:      document.getElementById('stampDuty').value.trim(),
+    };
+    try {
+        await CPTSA.Fees.create(data);
+        document.getElementById('feeForm').reset();
+        showToast('✅ Fee Structure Added!');
+        renderFees();
+    } catch(err) { showToast('Error: ' + err.message); }
+}
+
+async function deleteFee(id) {
+    if (!confirm('Delete this fee structure?')) return;
+    try {
+        await CPTSA.Fees.delete(id);
+        showToast('Deleted.');
+        renderFees();
+    } catch(e) { showToast('Error: ' + e.message); }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        var session = await CPTSA.Auth.session();
+        if (session && session.role === 'admin') {
+            document.getElementById('authCheck').style.display = 'none';
+            document.getElementById('portalContent').style.display = 'block';
+            renderFees();
+        } else {
+            document.getElementById('authCheck').textContent = 'Access Denied. Redirecting…';
+            setTimeout(() => window.location.href = 'admin.html', 1200);
+        }
+    } catch {
+        document.getElementById('authCheck').textContent = 'Access Denied. Redirecting…';
+        setTimeout(() => window.location.href = 'admin.html', 1200);
+    }
+});
+</script>
+</body>
+</html>

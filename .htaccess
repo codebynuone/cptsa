@@ -1,0 +1,33 @@
+# Default page
+DirectoryIndex index.html index.php
+
+# Enable URL rewriting for API
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /cptsa_backend/
+
+    # Route /api/something → api/something.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^api/([a-z_]+)/?(.*)$ api/$1.php?path=$2 [QSA,L]
+</IfModule>
+
+# Protect sensitive files
+<FilesMatch "\.(sql|md|log|env|ini)$">
+    Require all denied
+</FilesMatch>
+
+<Files "config.php">
+    Require all denied
+</Files>
+
+# CORS for API
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
+# Disable directory listing
+Options -Indexes
+

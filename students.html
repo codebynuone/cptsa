@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal — Transport Services Authority</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1a202c; --gold: #c9a227; --sage: #718096;
+            --cream: #fffbf0; --border: #e2e8f0;
+            --danger: #e53e3e; --success: #38a169; --bg-body: #f7fafc;
+        }
+        body { font-family: 'Source Sans Pro', sans-serif; background: var(--bg-body); color: var(--navy); margin: 0; line-height: 1.5; }
+        h1,h2,h3,h4,h5 { font-family: 'Playfair Display', serif; margin: 0 0 0.5rem 0; }
+        .card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 1.5rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-size: 0.95rem; text-decoration: none; gap: 0.4rem; }
+        .btn-primary { background: var(--navy); color: white; }
+        .btn-primary:hover { background: #2d3748; }
+        .btn-secondary { background: var(--gold); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--navy); }
+        .btn-full { width: 100%; }
+        .btn-sm { padding: 0.25rem 0.75rem; font-size: 0.85rem; }
+        .form-control { width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 0.375rem; font-size: 1rem; box-sizing: border-box; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.35rem; font-weight: 600; font-size: 0.9rem; color: var(--navy); }
+        .text-sage { color: var(--sage); } .text-sm { font-size: 0.875rem; } .text-xs { font-size: 0.75rem; } .font-bold { font-weight: 700; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .badge { display: inline-block; padding: 0.25em 0.6em; font-size: 0.75rem; font-weight: 700; border-radius: 10rem; line-height: 1; }
+        .badge-success { background: #c6f6d5; color: #22543d; } .badge-warning { background: #feebc8; color: #744210; }
+        .badge-danger { background: #fed7d7; color: #742a2a; } .badge-info { background: #bee3f8; color: #2a4365; }
+        .portal-page { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem; }
+        .login-card { max-width: 420px; margin: 4rem auto; }
+        .portal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+        .tabs { display: flex; gap: 0.5rem; overflow-x: auto; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; scrollbar-width: none; }
+        .tab-btn { background: none; border: none; padding: 0.5rem 1rem; color: var(--sage); font-weight: 600; cursor: pointer; border-radius: 0.375rem; white-space: nowrap; }
+        .tab-btn:hover { color: var(--navy); background: var(--cream); }
+        .tab-btn.active { color: var(--navy); background: var(--cream); border-bottom: 2px solid var(--gold); }
+        .tab-panel { display: none; animation: fadeIn 0.25s ease; }
+        .tab-panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .hours-bar { height: 10px; background: #edf2f7; border-radius: 9999px; overflow: hidden; width: 100%; }
+        .hours-fill { height: 100%; border-radius: 9999px; transition: width 0.5s ease; background: var(--success); }
+        .hours-fill.warning { background: var(--gold); }
+        .hours-fill.danger { background: var(--danger); }
+        .vehicle-hours-card { border: 1px solid var(--border); border-radius: 0.75rem; padding: 1rem; margin-bottom: 0.75rem; background: #fff; }
+        .slot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.6rem; margin-top: 0.75rem; }
+        .slot-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.75rem; border: 1px solid var(--border); border-radius: 0.5rem; background: white; cursor: pointer; transition: all 0.2s; height: 85px; }
+        .slot-btn:hover:not(:disabled) { border-color: var(--gold); background: var(--cream); transform: translateY(-2px); }
+        .slot-btn:disabled { opacity: 0.6; cursor: not-allowed; background: #f7fafc; }
+        .slot-btn.mine { background: #c6f6d5; border-color: #48bb78; color: #22543d; font-weight: 700; }
+        .slot-btn.full { background: #fed7d7; border-color: #fc8181; color: #742a2a; }
+        .vehicle-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .vehicle-tab-btn { padding: 0.4rem 0.9rem; border: 2px solid var(--border); border-radius: 0.5rem; background: white; font-weight: 600; cursor: pointer; font-size: 0.9rem; transition: all 0.15s; }
+        .vehicle-tab-btn.active { border-color: var(--gold); background: var(--cream); }
+        .profile-layout { display: grid; grid-template-columns: 200px 1fr; gap: 2rem; align-items: start; }
+        @media (max-width: 600px) { .profile-layout { grid-template-columns: 1fr; text-align: center; } }
+        .profile-img-wrapper { width: 150px; height: 150px; margin: 0 auto 1rem; position: relative; }
+        .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--gold); background: #f7fafc; }
+        .profile-placeholder { width: 100%; height: 100%; border-radius: 50%; background: #e2e8f0; color: var(--sage); display: flex; align-items: center; justify-content: center; font-size: 3.5rem; border: 4px solid var(--gold); }
+        .msg-card { background: #f7fafc; border-left: 4px solid var(--gold); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .exam-card { border: 1px solid var(--border); border-radius: 0.5rem; padding: 1rem; background: #fff; margin-bottom: 1rem; }
+        .header-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--navy); border: 3px solid var(--gold); display: flex; align-items: center; justify-content: center; color: white; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.25rem; flex-shrink: 0; overflow: hidden; }
+        .header-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .password-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        @media (max-width: 500px) { .password-grid { grid-template-columns: 1fr; } }
+        .hidden { display: none !important; }
+        #toast { visibility: hidden; min-width: 260px; background: #333; color: #fff; text-align: center; border-radius: 6px; padding: 14px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%); }
+        #toast.show { visibility: visible; animation: fadein 0.4s, fadeout 0.4s 2.6s; }
+        @keyframes fadein { from {bottom:0;opacity:0} to {bottom:30px;opacity:1} }
+        @keyframes fadeout { from {bottom:30px;opacity:1} to {bottom:0;opacity:0} }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+    <div class="portal-page">
+        <div class="card login-card">
+            <div style="text-align:center;margin-bottom:2rem;">
+                <div style="width:64px;height:64px;border-radius:50%;background:var(--navy);margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.5rem;font-weight:bold;border:2px solid var(--gold);">SA</div>
+                <h2 style="font-size:1.6rem;font-weight:700;color:var(--navy);">Student Portal</h2>
+                <p class="text-sage text-sm" style="margin-top:0.25rem;">Sign in with your ID or phone number</p>
+            </div>
+            <div class="form-group">
+                <label>ID / Phone Number</label>
+                <input type="text" id="loginId" class="form-control" placeholder="Enter NIC or Phone">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPass" class="form-control" placeholder="Enter password">
+            </div>
+            <p id="loginError" style="color:var(--danger);font-size:0.875rem;margin-bottom:0.75rem;display:none;"></p>
+            <button class="btn btn-primary btn-full" onclick="handleLogin()" style="margin-bottom:0.75rem;">Sign In</button>
+            <a href="index.html" class="btn btn-primary btn-full" style="display: flex; align-items: center; justify-content: center; text-decoration: none; padding: 0.5rem 1rem; box-sizing: border-box;">Back to Home</a>
+        </div>
+    </div>
+</div>
+
+<!-- PORTAL DASHBOARD -->
+<div id="portalDashboard" class="hidden">
+    <div class="portal-page">
+        <div class="portal-header">
+            <div style="display:flex;align-items:center;gap:1rem;">
+                <div id="headerAvatar" class="header-avatar">SA</div>
+                <div>
+                    <div id="welcomeMsg" style="font-size:1.1rem;font-weight:700;"></div>
+                    <div id="welcomeRole" style="font-size:0.8rem;opacity:0.75;">Student</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+                <span id="headerHours" style="font-size:0.8rem;background:rgba(26,32,44,0.08);padding:0.3rem 0.75rem;border-radius:9999px;font-weight:600;"></span>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('dashboard',this)">Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('timetable',this)">My Timetable</button>
+            <button class="tab-btn" onclick="switchTab('exams',this)">My Exams</button>
+            <button class="tab-btn" onclick="switchTab('messages',this)">Messages</button>
+            <button class="tab-btn" onclick="switchTab('profile',this)">My Profile</button>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div class="tab-panel active" id="panelDashboard">
+            <div class="grid-2">
+                <div class="card"><h4 class="font-bold" style="margin-bottom:1rem;">⏱ My Training Hours</h4><div id="hoursDisplay"></div></div>
+                <div class="card"><h4 class="font-bold" style="margin-bottom:1rem;">📋 Quick Information</h4><div id="quickInfo"></div></div>
+            </div>
+            <div class="card"><h4 class="font-bold" style="margin-bottom:0.75rem;">📢 Announcements</h4><div id="studentAnnouncements"></div></div>
+            <div class="card"><h4 class="font-bold" style="margin-bottom:0.75rem;">📄 Documents</h4><div id="studentDocs"></div></div>
+        </div>
+
+        <!-- TIMETABLE -->
+        <div class="tab-panel" id="panelTimetable">
+            <div class="card" style="margin-bottom:1.5rem;">
+                <h4 class="font-bold" style="margin-bottom:0.5rem;">Book Your Training Slot</h4>
+                <p class="text-sage text-sm" style="margin-bottom:1rem;">Each booking deducts <strong>0.5h</strong> from your remaining hours.</p>
+                <div class="vehicle-tabs" id="vehicleTabsContainer"></div>
+                <div class="form-group" style="max-width:200px;margin-bottom:0;">
+                    <label>Filter by Date</label>
+                    <input type="date" id="slotDateFilter" class="form-control" oninput="renderTimetable()">
+                </div>
+            </div>
+            <div id="timetableContainer"></div>
+            <div id="myBookings"></div>
+        </div>
+
+        <!-- EXAMS -->
+        <div class="tab-panel" id="panelExams">
+            <div class="card">
+                <h4 class="font-bold" style="margin-bottom:1rem;">📝 My Exam Status</h4>
+                <div id="examDisplayContainer"></div>
+            </div>
+        </div>
+
+        <!-- MESSAGES -->
+        <div class="tab-panel" id="panelMessages">
+            <div class="card">
+                <h4 class="font-bold" style="margin-bottom:1rem;">📨 Inbox</h4>
+                <div id="messagesContainer"></div>
+            </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="tab-panel" id="panelProfile">
+            <div class="card">
+                <h4 class="font-bold" style="margin-bottom:1rem;">My Profile</h4>
+                <div class="profile-layout">
+                    <div style="text-align:center;">
+                        <div class="profile-img-wrapper">
+                            <img id="profilePhotoImg" src="" class="profile-img hidden">
+                            <div id="profilePhotoPlaceholder" class="profile-placeholder">👤</div>
+                        </div>
+                        <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+                        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('photoInput').click()">📸 Upload Photo</button>
+                        <p class="text-sage text-xs" style="margin-top:0.5rem;">Max 2MB (JPG/PNG)</p>
+                    </div>
+                    <div id="profileDetails"></div>
+                </div>
+            </div>
+            <div class="card">
+                <h4 class="font-bold" style="margin-bottom:0.5rem;">🔒 Change Password</h4>
+                <p class="text-sage text-sm" style="margin-bottom:1rem;">Enter your current password to set a new one.</p>
+                <div class="password-grid">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Current Password</label>
+                        <input type="password" id="currentPass" class="form-control" placeholder="Current password">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>New Password</label>
+                        <input type="password" id="newPass" class="form-control" placeholder="New password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="confirmPass" class="form-control" placeholder="Re-enter new password">
+                </div>
+                <button class="btn btn-primary" onclick="handlePasswordChange()">Update Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast"><span id="toastMsg"></span></div>
+
+<!-- API Client -->
+<script src="api_client.js"></script>
+<script>
+// ── State ────────────────────────────────────────────────
+var currentStudent = null;
+var activeVehicle  = null;
+var allVehicles    = [];
+var vehicleMap     = {};  // id → label
+
+function showToast(msg) {
+    var t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = 'show';
+    setTimeout(() => { t.className = ''; }, 3200);
+}
+
+// ── AUTH ─────────────────────────────────────────────────
+async function handleLogin() {
+    var id   = document.getElementById('loginId').value.trim();
+    var pass = document.getElementById('loginPass').value.trim();
+    var err  = document.getElementById('loginError');
+    err.style.display = 'none';
+
+    if (!id || !pass) { err.textContent = 'Please enter ID and password.'; err.style.display = 'block'; return; }
+
+    try {
+        await CPTSA.Auth.studentLogin(id, pass);
+        await loadPortal();
+    } catch(e) {
+        err.textContent = e.message || 'Login failed.';
+        err.style.display = 'block';
+    }
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !document.getElementById('loginScreen').classList.contains('hidden')) handleLogin();
+});
+
+async function logout() {
+    await CPTSA.Auth.logout().catch(() => {});
+    currentStudent = null;
+    document.getElementById('portalDashboard').classList.add('hidden');
+    document.getElementById('loginScreen').style.display = '';
+    document.getElementById('loginId').value = '';
+    document.getElementById('loginPass').value = '';
+}
+
+// ── PORTAL INIT ──────────────────────────────────────────
+async function loadPortal() {
+    try {
+        // Load vehicle list & student data in parallel
+        const [vList, student] = await Promise.all([
+            CPTSA.Vehicles.list(),
+            CPTSA.Students.dashboard(),
+        ]);
+
+        vList.forEach(v => { vehicleMap[v.id] = v.label; });
+        allVehicles   = vList;
+        currentStudent = student;
+
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('portalDashboard').classList.remove('hidden');
+
+        activeVehicle = (student.vehicles && student.vehicles[0]) || null;
+
+        renderHeader();
+        renderDashboard();
+        renderVehicleTabs();
+        await renderTimetable();
+        renderProfile();
+        renderAnnouncements();
+        renderDocs();
+        renderExamList();
+        renderMessages();
+    } catch(e) {
+        showToast('Failed to load portal: ' + e.message);
+    }
+}
+
+function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel' + name.charAt(0).toUpperCase() + name.slice(1)).classList.add('active');
+    if (btn) btn.classList.add('active');
+
+    if (name === 'dashboard')  { renderDashboard(); renderAnnouncements(); renderDocs(); }
+    if (name === 'timetable')  { renderVehicleTabs(); renderTimetable(); }
+    if (name === 'exams')      renderExamList();
+    if (name === 'messages')   renderMessages();
+    if (name === 'profile')    renderProfile();
+}
+
+// ── HEADER ───────────────────────────────────────────────
+function renderHeader() {
+    var s = currentStudent;
+    var name = s.name_init || s.last_name || 'Student';
+    var initials = name.split(' ').filter(Boolean).slice(0,2).map(w => w[0]).join('').toUpperCase() || 'SA';
+
+    var av = document.getElementById('headerAvatar');
+    if (s.photo_url) {
+        av.innerHTML = `<img src="${s.photo_url}" alt="">`;
+    } else {
+        av.textContent = initials;
+    }
+    document.getElementById('welcomeMsg').textContent = name;
+
+    var labels = (s.vehicles || []).map(v => vehicleMap[v] || v).join(', ');
+    document.getElementById('welcomeRole').textContent = 'Student — ' + (labels || '—');
+
+    var hrs = (s.hours || []).map(h => (vehicleMap[h.vehicle_id] || h.vehicle_id) + ': ' + h.used + '/' + h.limit + 'h').join('  |  ');
+    document.getElementById('headerHours').textContent = hrs;
+}
+
+// ── DASHBOARD ────────────────────────────────────────────
+function renderDashboard() {
+    var s = currentStudent;
+    var hours = s.hours || [];
+
+    var hoursHtml = hours.map(h => {
+        var label = vehicleMap[h.vehicle_id] || h.vehicle_id;
+        var pct   = Math.min(100, (h.used / h.limit) * 100);
+        var cls   = pct < 60 ? '' : pct < 90 ? 'warning' : 'danger';
+        var warn  = h.used >= h.limit && !h.extra_paid
+            ? `<div style="margin-top:0.5rem;padding:0.5rem 0.75rem;background:#fed7d7;border-radius:0.5rem;font-size:0.82rem;color:#742a2a;font-weight:600;">⚠️ Limit reached. Contact admin to pay &amp; re-register.</div>` : '';
+        return `<div class="vehicle-hours-card">
+            <div style="display:flex;justify-content:space-between;font-weight:700;">${label}<span class="text-sage text-sm">${h.booking_hrs}h from bookings</span></div>
+            <div style="font-size:1.8rem;font-weight:700;">${h.used}<span style="font-size:0.9rem;color:var(--sage);">h / ${h.limit}h</span></div>
+            <div class="hours-bar" style="margin:0.5rem 0;"><div class="hours-fill ${cls}" style="width:${pct}%;"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--sage);">
+                <span>0h</span><span style="font-weight:600;color:var(--navy);">${h.remaining}h remaining</span><span>${h.limit}h</span>
+            </div>${warn}
+        </div>`;
+    }).join('');
+
+    document.getElementById('hoursDisplay').innerHTML = hoursHtml ||
+        '<p class="text-sage">No vehicle categories assigned.</p>';
+
+    var labels = (s.vehicles || []).map(v => vehicleMap[v] || v).join(', ') || '—';
+    document.getElementById('quickInfo').innerHTML = [
+        ['Name', s.name_init || '—'],
+        ['NIC', s.nic || '—'],
+        ['Phone', s.phone || '—'],
+        ['Categories', labels],
+        ['Registered', s.reg_date ? new Date(s.reg_date).toLocaleDateString() : '—'],
+        ['Blood Group', s.blood_group || '—'],
+    ].map(r =>
+        `<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);">
+            <span class="text-sage text-sm">${r[0]}</span>
+            <span style="font-weight:600;font-size:0.9rem;">${r[1]}</span>
+        </div>`
+    ).join('');
+}
+
+// ── VEHICLE TABS ─────────────────────────────────────────
+function renderVehicleTabs() {
+    var vehicles = currentStudent.vehicles || [];
+    document.getElementById('vehicleTabsContainer').innerHTML = vehicles.map(v =>
+        `<button class="vehicle-tab-btn${v === activeVehicle ? ' active' : ''}" onclick="selectVehicle('${v}', this)">${vehicleMap[v] || v}</button>`
+    ).join('');
+}
+
+function selectVehicle(v, btn) {
+    activeVehicle = v;
+    document.querySelectorAll('.vehicle-tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderTimetable();
+}
+
+// ── TIMETABLE ────────────────────────────────────────────
+async function renderTimetable() {
+    if (!currentStudent || !activeVehicle) return;
+
+    var dateFilter = document.getElementById('slotDateFilter')?.value || '';
+    var myVehicles = currentStudent.vehicles || [];
+    var container  = document.getElementById('timetableContainer');
+
+    if (!myVehicles.includes(activeVehicle)) {
+        container.innerHTML = `<div class="card" style="text-align:center;padding:2rem;color:var(--sage);">Not registered for ${vehicleMap[activeVehicle] || activeVehicle}.</div>`;
+        renderMyBookings();
+        return;
+    }
+
+    var hObj = (currentStudent.hours || []).find(h => h.vehicle_id === activeVehicle) || {};
+    var limitReached = (hObj.used || 0) >= (hObj.limit || 17);
+
+    try {
+        var slots = await CPTSA.Timetable.slots(activeVehicle, dateFilter);
+        var myBookingsList = await CPTSA.Timetable.myBookings();
+        var mySlotIds = new Set(myBookingsList.map(b => b.slot_id));
+
+        if (!slots.length) {
+            container.innerHTML = `<div class="card" style="text-align:center;padding:2.5rem;color:var(--sage);">No training slots scheduled yet.</div>`;
+        } else {
+            // Group by date
+            var grouped = {};
+            slots.forEach(s => { (grouped[s.slot_date] = grouped[s.slot_date] || []).push(s); });
+
+            var limitBanner = limitReached
+                ? `<div style="padding:0.75rem 1rem;background:#fed7d7;border-radius:0.75rem;color:#742a2a;font-weight:600;margin-bottom:1rem;">⚠️ ${hObj.limit}h limit reached. Booking disabled until admin resets.</div>` : '';
+
+            container.innerHTML = limitBanner + Object.keys(grouped).sort().map(date => {
+                var dateStr = new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+                var slotsHtml = grouped[date].map(sl => {
+                    var isMe = mySlotIds.has(sl.id);
+                    var isFull = sl.booked_count >= sl.capacity;
+                    var btnClass = isMe ? 'mine' : (limitReached || isFull) ? (isFull ? 'full' : '') : '';
+                    var disabled = (!isMe && (limitReached || isFull)) ? 'disabled' : '';
+                    var label = isMe ? '✓ Yours' : (isFull ? 'Full' : (limitReached ? 'Limit' : sl.display_time));
+                    var onclick = isMe ? `cancelSlot('${sl.id}')` : (!limitReached && !isFull ? `bookSlot('${sl.id}')` : '');
+                    return `<button class="slot-btn ${btnClass}" ${disabled} ${onclick ? `onclick="${onclick}"` : ''}>
+                        <div style="font-size:0.9rem;font-weight:700;">${label}</div>
+                        <div style="font-size:0.7rem;opacity:0.8;margin-top:2px;">${sl.booked_count}/${sl.capacity}</div>
+                    </button>`;
+                }).join('');
+                return `<div class="card"><div style="font-weight:700;font-size:1rem;margin-bottom:0.75rem;">${dateStr}</div><div class="slot-grid">${slotsHtml}</div></div>`;
+            }).join('');
+        }
+        renderMyBookings(myBookingsList);
+    } catch(e) {
+        container.innerHTML = `<div class="card" style="color:var(--danger);">Failed to load slots: ${e.message}</div>`;
+    }
+}
+
+async function renderMyBookings(list) {
+    var div = document.getElementById('myBookings');
+    var bookings = list || await CPTSA.Timetable.myBookings().catch(() => []);
+    if (!bookings.length) { div.innerHTML = ''; return; }
+    div.innerHTML = `<div class="card"><h4 class="font-bold" style="margin-bottom:0.75rem;">My Upcoming Bookings</h4>` +
+        bookings.map(b => {
+            var dateStr = new Date(b.slot_date + 'T12:00:00').toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);">
+                <div><span class="badge badge-info">${b.vehicle_label || b.vehicle_id}</span> <strong>${dateStr}</strong> — ${b.display_time}</div>
+                <button class="btn btn-danger btn-sm" onclick="cancelSlot('${b.slot_id}')">Cancel</button>
+            </div>`;
+        }).join('') + '</div>';
+}
+
+async function bookSlot(slotId) {
+    try {
+        await CPTSA.Timetable.book(slotId);
+        // refresh student data for updated hours
+        currentStudent = await CPTSA.Students.dashboard();
+        renderHeader();
+        renderDashboard();
+        await renderTimetable();
+        showToast('✅ Slot booked — 0.5h deducted.');
+    } catch(e) { showToast('⚠️ ' + e.message); }
+}
+
+async function cancelSlot(slotId) {
+    if (!confirm('Cancel this booking?')) return;
+    try {
+        await CPTSA.Timetable.cancel(slotId);
+        currentStudent = await CPTSA.Students.dashboard();
+        renderHeader();
+        renderDashboard();
+        await renderTimetable();
+        showToast('Booking cancelled.');
+    } catch(e) { showToast('Error: ' + e.message); }
+}
+
+// ── EXAMS ────────────────────────────────────────────────
+async function renderExamList() {
+    var container = document.getElementById('examDisplayContainer');
+    try {
+        var exams = await CPTSA.Exams.myExams();
+        if (!exams.length) { container.innerHTML = '<p class="text-sage">No vehicle categories registered.</p>'; return; }
+        container.innerHTML = exams.map(e => {
+            var badge = s => s === 'pass' ? '<span class="badge badge-success">PASS</span>'
+                : s === 'fail' ? '<span class="badge badge-danger">FAIL</span>'
+                : '<span class="badge badge-warning">PENDING</span>';
+            return `<div class="exam-card">
+                <h5 style="color:var(--navy);margin-bottom:0.75rem;">${e.vehicle_label || e.vehicle_id}</h5>
+                <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px dashed var(--border);">
+                    <span style="font-weight:600;">Written Test</span>${badge(e.written)}</div>
+                <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px dashed var(--border);">
+                    <span style="font-weight:600;">Practical Test</span>${badge(e.practical)}</div>
+                <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
+                    <span style="font-weight:600;">Next Exam Date</span>
+                    <span style="font-weight:700;">${e.exam_date ? new Date(e.exam_date).toLocaleDateString() : '—'}</span>
+                </div>
+            </div>`;
+        }).join('');
+    } catch(e) { container.innerHTML = '<p class="text-sage">Failed to load exams.</p>'; }
+}
+
+// ── MESSAGES ─────────────────────────────────────────────
+async function renderMessages() {
+    var container = document.getElementById('messagesContainer');
+    try {
+        var msgs = await CPTSA.Messages.inbox();
+        if (!msgs.length) { container.innerHTML = '<p class="text-sage" style="text-align:center;padding:1rem;">No messages.</p>'; return; }
+        container.innerHTML = msgs.map(m =>
+            `<div class="msg-card">
+                <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--sage);margin-bottom:0.25rem;">
+                    <span>From: Admin</span><span>${new Date(m.sent_at).toLocaleString()}</span>
+                </div>
+                <h5 style="margin:0.25rem 0;font-weight:700;">${m.title}</h5>
+                <div style="white-space:pre-wrap;line-height:1.4;">${m.body}</div>
+            </div>`
+        ).join('');
+    } catch(e) { container.innerHTML = '<p class="text-sage">Failed to load messages.</p>'; }
+}
+
+// ── PROFILE ──────────────────────────────────────────────
+function renderProfile() {
+    var s = currentStudent;
+    var pImg   = document.getElementById('profilePhotoImg');
+    var pPlace = document.getElementById('profilePhotoPlaceholder');
+    if (s.photo_url) {
+        pImg.src = s.photo_url; pImg.classList.remove('hidden'); pPlace.classList.add('hidden');
+    } else {
+        pImg.classList.add('hidden'); pPlace.classList.remove('hidden');
+    }
+    var labels = (s.vehicles || []).map(v => vehicleMap[v] || v).join(', ') || '—';
+    document.getElementById('profileDetails').innerHTML = [
+        ['NIC', s.nic || '—'],
+        ['Full Name', ((s.last_name || '') + ' ' + (s.other_names || '')).trim() || '—'],
+        ['Name with Initials', s.name_init || '—'],
+        ['Gender', s.gender || '—'],
+        ['Phone', s.phone || '—'],
+        ['Address', s.address || '—'],
+        ['Blood Group', s.blood_group || '—'],
+        ['License Categories', labels],
+        ['Registered', s.reg_date ? new Date(s.reg_date).toLocaleDateString() : '—'],
+    ].map(r =>
+        `<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid var(--border);">
+            <span class="text-sage text-sm">${r[0]}</span>
+            <span style="font-weight:600;font-size:0.9rem;text-align:right;max-width:65%;">${r[1]}</span>
+        </div>`
+    ).join('');
+}
+
+async function handlePhotoUpload(input) {
+    if (!input.files || !input.files[0]) return;
+    var file = input.files[0];
+    if (file.size > 2 * 1024 * 1024) { showToast('⚠️ File too large (max 2 MB).'); return; }
+    try {
+        var res = await CPTSA.Students.uploadPhoto(file);
+        currentStudent.photo_url = res.photo_url;
+        renderHeader();
+        renderProfile();
+        showToast('✅ Photo updated!');
+    } catch(e) { showToast('Upload failed: ' + e.message); }
+    input.value = '';
+}
+
+// ── CHANGE PASSWORD ───────────────────────────────────────
+async function handlePasswordChange() {
+    var current  = document.getElementById('currentPass').value.trim();
+    var newPass  = document.getElementById('newPass').value.trim();
+    var confirm  = document.getElementById('confirmPass').value.trim();
+    if (!current || !newPass || !confirm) { showToast('⚠️ All fields are required.'); return; }
+    if (newPass.length < 4) { showToast('⚠️ New password must be at least 4 characters.'); return; }
+    if (newPass !== confirm) { showToast('⚠️ Passwords do not match.'); return; }
+    try {
+        await CPTSA.Students.changePassword({ current_password: current, new_password: newPass });
+        document.getElementById('currentPass').value = '';
+        document.getElementById('newPass').value = '';
+        document.getElementById('confirmPass').value = '';
+        showToast('✅ Password changed successfully!');
+    } catch(e) { showToast('❌ ' + e.message); }
+}
+
+// ── ANNOUNCEMENTS & DOCS ─────────────────────────────────
+async function renderAnnouncements() {
+    var c = document.getElementById('studentAnnouncements');
+    try {
+        var list = await CPTSA.Announcements.list();
+        c.innerHTML = list.length
+            ? list.map(a => `<div style="border:1px solid var(--border);padding:1rem;border-radius:0.5rem;">
+                <h4 style="font-weight:700;">${a.title}</h4>
+                <p class="text-sage text-sm" style="margin-top:0.5rem;">${a.content}</p>
+              </div>`).join('')
+            : '<p class="text-sage text-sm">No announcements.</p>';
+    } catch { c.innerHTML = '<p class="text-sage text-sm">Failed to load.</p>'; }
+}
+
+async function renderDocs() {
+    var c = document.getElementById('studentDocs');
+    try {
+        var docs = await CPTSA.Documents.list();
+        c.innerHTML = docs.length
+            ? docs.map(d => `<div style="display:flex;align-items:center;gap:0.75rem;">
+                <span style="font-size:1.5rem;">📄</span>
+                <div style="flex:1;"><div style="font-weight:600;">${d.name}</div><div class="text-sage text-xs">${(d.file_size/1024).toFixed(1)} KB</div></div>
+                <a href="${CPTSA.Documents.downloadUrl(d.id)}" class="btn btn-primary btn-sm">Download</a>
+              </div>`).join('')
+            : '<p class="text-sage text-sm">No documents.</p>';
+    } catch { c.innerHTML = '<p class="text-sage text-sm">Failed to load.</p>'; }
+}
+
+// ── INIT ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        var session = await CPTSA.Auth.session();
+        if (session && session.role === 'student') {
+            await loadPortal();
+        }
+    } catch {}
+});
+</script>
+</body>
+</html>

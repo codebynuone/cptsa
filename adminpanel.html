@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Instructors — Transport Services Authority</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+
+<div id="login-overlay">
+    <div class="login-box">
+        <h2 class="text-navy" style="margin-bottom:1rem;">Admin Access</h2>
+        <p class="text-sage mb-1">Login to manage instructors.</p>
+        <input type="password" id="adminPass" class="form-control mb-1" placeholder="Password (admin123)">
+        <button onclick="checkLogin()" class="btn btn-primary" style="width:100%;">Login</button>
+        <p id="loginError" style="color:var(--danger);font-size:.85rem;margin-top:.5rem;display:none;">Incorrect password.</p>
+    </div>
+</div>
+
+<nav class="nav-placeholder">
+    <div class="container inner">
+        <h3 style="font-family:'Playfair Display',serif;">Admin Dashboard</h3>
+        <div>
+            <a href="index.html" class="btn btn-outline" style="margin-right:.5rem;">🏠 Home</a>
+            <a href="admin.html" class="btn btn-primary">🔐 Admin</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container" style="padding-top:2rem;padding-bottom:4rem;">
+    <header class="text-center">
+        <h1 class="text-navy">Manage Instructors</h1>
+        <p class="text-sage">Add, edit, or remove staff members.</p>
+    </header>
+
+    <div class="admin-dashboard">
+        <!-- LEFT: FORM -->
+        <div class="admin-form-section">
+            <h3 class="text-navy mb-1" id="formTitle">Add New Instructor</h3>
+            <hr style="border:0;border-top:1px solid #eee;margin-bottom:1.5rem;">
+            <input type="hidden" id="editId">
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="inpName" class="form-control" placeholder="e.g. B.G.N.I. Abeyrathna">
+            </div>
+            <div class="form-group">
+                <label>Title / Position</label>
+                <input type="text" id="inpTitle" class="form-control" placeholder="e.g. Certified Grade C Instructor">
+            </div>
+            <div class="form-group">
+                <label>Badges (comma-separated)</label>
+                <input type="text" id="inpBadges" class="form-control" placeholder="e.g. D.I. 1331, Grade C, Valid 2028">
+            </div>
+            <div class="form-group">
+                <label>Profile Photo</label>
+                <input type="file" id="inpImage" class="form-control" accept="image/*" onchange="previewPhoto(this)">
+                <img id="previewImage" style="display:none;width:80px;height:80px;object-fit:cover;border-radius:50%;margin-top:10px;border:2px solid var(--gold);">
+                <p style="font-size:.8rem;color:var(--sage);margin-top:5px;">Leave empty to keep current photo when editing.</p>
+            </div>
+            <div class="form-group">
+                <label>Bio / Description</label>
+                <textarea id="inpBio" class="form-control" rows="4" placeholder="Short biography…"></textarea>
+            </div>
+            <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+                <button onclick="saveInstructor()" class="btn btn-primary" style="flex:1;">Save Instructor</button>
+                <button onclick="resetForm()" class="btn btn-outline" style="flex:1;">Cancel</button>
+            </div>
+        </div>
+
+        <!-- RIGHT: LIST -->
+        <div class="admin-list-section">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <h3 class="text-navy">Existing Instructors</h3>
+                <span id="countBadge" class="badge">0</span>
+            </div>
+            <div id="adminListContainer"></div>
+        </div>
+    </div>
+</main>
+
+<div id="toast"><span id="toastMsg"></span></div>
+<script src="api_client.js"></script>
+<script>
+var isEditing = false;
+var selectedPhotoFile = null;
+
+function showToast(msg) {
+    var t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = 'show';
+    setTimeout(() => { t.className = t.className.replace('show',''); }, 3000);
+}
+
+async function checkLogin() {
+    var pass = document.getElementById('adminPass').value;
+    try {
+        await CPTSA.Auth.adminLogin('admin', pass);
+        document.getElementById('login-overlay').style.display = 'none';
+        renderInstructors();
+    } catch {
+        document.getElementById('loginError').style.display = 'block';
+    }
+}
+
+document.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter' && document.getElementById('login-overlay').style.display !== 'none') checkLogin();
+});
+
+function previewPhoto(input) {
+    selectedPhotoFile = input.files[0] || null;
+    if (selectedPhotoFile) {
+        var reader = new FileReader();
+        reader.onload = e => {
+            var img = document.getElementById('previewImage');
+            img.src = e.target.result;
+            img.style.display = 'block';
+        };
+        reader.readAsDataURL(selectedPhotoFile);
+    }
+}
+
+async function renderInstructors() {
+    try {
+        var list = await CPTSA.Instructors.list();
+        var c = document.getElementById('adminListContainer');
+        document.getElementById('countBadge').textContent = list.length;
+
+        c.innerHTML = list.length ? list.map(inst => {
+            var imgSrc = inst.photo_url || 'https://via.placeholder.com/50';
+            return `<div class="instructor-row">
+                <div class="instructor-info">
+                    <img src="${imgSrc}" class="instructor-thumb" onerror="this.src='https://via.placeholder.com/50'">
+                    <div>
+                        <div style="font-weight:700;color:var(--navy);">${escHtml(inst.name)}</div>
+                        <div style="font-size:.85rem;color:var(--sage);">${escHtml(inst.title || '')}</div>
+                    </div>
+                </div>
+                <div>
+                    <button onclick="editInstructor(${inst.id})" class="btn btn-primary btn-sm">Edit</button>
+                    <button onclick="deleteInstructor(${inst.id})" class="btn btn-danger btn-sm">Delete</button>
+                </div>
+            </div>`;
+        }).join('') : '<p class="text-sage text-center mt-1">No instructors found.</p>';
+    } catch(e) { showToast('Error loading: ' + e.message); }
+}
+
+async function editInstructor(id) {
+    try {
+        var list = await CPTSA.Instructors.list();
+        var inst = list.find(x => x.id === id);
+        if (!inst) return;
+
+        isEditing = true;
+        document.getElementById('editId').value       = id;
+        document.getElementById('formTitle').textContent = 'Edit Instructor';
+        document.getElementById('inpName').value      = inst.name || '';
+        document.getElementById('inpTitle').value     = inst.title || '';
+        document.getElementById('inpBadges').value    = Array.isArray(inst.badges) ? inst.badges.join(', ') : '';
+        document.getElementById('inpBio').value       = inst.bio || '';
+        selectedPhotoFile = null;
+
+        var img = document.getElementById('previewImage');
+        if (inst.photo_url) { img.src = inst.photo_url; img.style.display = 'block'; }
+        else img.style.display = 'none';
+
+        document.querySelector('.admin-dashboard').scrollIntoView({ behavior: 'smooth' });
+    } catch(e) { showToast('Error: ' + e.message); }
+}
+
+async function saveInstructor() {
+    var name = document.getElementById('inpName').value.trim();
+    if (!name) { showToast('Name is required.'); return; }
+
+    var data = {
+        name,
+        title:  document.getElementById('inpTitle').value.trim(),
+        badges: document.getElementById('inpBadges').value.trim(),
+        bio:    document.getElementById('inpBio').value.trim(),
+    };
+
+    try {
+        if (isEditing) {
+            await CPTSA.Instructors.update(parseInt(document.getElementById('editId').value), data, selectedPhotoFile || undefined);
+            showToast('✅ Instructor updated.');
+        } else {
+            await CPTSA.Instructors.create(data, selectedPhotoFile || undefined);
+            showToast('✅ Instructor added.');
+        }
+        resetForm();
+        renderInstructors();
+    } catch(e) { showToast('Error: ' + e.message); }
+}
+
+async function deleteInstructor(id) {
+    if (!confirm('Delete this instructor?')) return;
+    try {
+        await CPTSA.Instructors.delete(id);
+        showToast('Deleted.');
+        if (isEditing && parseInt(document.getElementById('editId').value) === id) resetForm();
+        renderInstructors();
+    } catch(e) { showToast('Error: ' + e.message); }
+}
+
+function resetForm() {
+    isEditing = false;
+    selectedPhotoFile = null;
+    document.getElementById('editId').value = '';
+    document.getElementById('formTitle').textContent = 'Add New Instructor';
+    ['inpName','inpTitle','inpBadges','inpBio'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('inpImage').value = '';
+    document.getElementById('previewImage').style.display = 'none';
+}
+
+function escHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        var session = await CPTSA.Auth.session();
+        if (session && session.role === 'admin') {
+            document.getElementById('login-overlay').style.display = 'none';
+            renderInstructors();
+        }
+    } catch {}
+});
+</script>
+</body>
+</html>

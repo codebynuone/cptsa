@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructors — Transport Services Authority</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--navy:#0f2744;--gold:#c9a227;--white:#fff;--gray-light:#f8f9fa}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Source Sans Pro',sans-serif;background:var(--gray-light);color:#333;line-height:1.6}
+        h1,h2,h3,h4,h5{font-family:'Playfair Display',serif}
+        a{text-decoration:none;transition:all .3s ease}
+        .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+        .text-center{text-align:center}.text-navy{color:var(--navy)}.text-gold{color:var(--gold)}.text-sage{color:#555}
+        .mb-1{margin-bottom:.5rem}.font-semibold{font-weight:600}.py-20{padding-top:5rem;padding-bottom:5rem}
+        .btn{display:inline-block;padding:.75rem 1.5rem;border-radius:4px;font-weight:600;cursor:pointer}
+        .btn-lg{padding:1rem 2rem;font-size:1.1rem}
+        .btn-outline{background:transparent;border:2px solid transparent}
+        .hero-gradient{background:linear-gradient(135deg,#0f2744 0%,#1a3a60 100%);position:relative;overflow:hidden}
+        .pattern-overlay::after{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(rgba(201,162,39,.1) 1px,transparent 1px);background-size:20px 20px;pointer-events:none}
+        .animate-fade-in-up{opacity:0;transform:translateY(20px);animation:fadeInUp .8s ease forwards}
+        .stagger-1{animation-delay:.2s}.stagger-2{animation-delay:.4s}
+        @keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
+        .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:2rem}
+        .card{background:#fff;border-radius:8px;padding:2rem;box-shadow:0 4px 6px rgba(0,0,0,.05);transition:transform .3s ease,box-shadow .3s ease;text-align:center}
+        .card:hover{transform:translateY(-5px);box-shadow:0 10px 15px rgba(0,0,0,.1)}
+        .badge{display:inline-block;background:rgba(15,39,68,.1);color:var(--navy);font-size:.75rem;padding:.25rem .5rem;border-radius:4px;margin:.25rem;font-weight:600}
+        footer{background:var(--navy);color:#fff;text-align:center;padding:3rem 1rem;margin-top:auto}
+        #toast{visibility:hidden;min-width:250px;background:var(--navy);color:#fff;text-align:center;border-radius:4px;padding:16px;position:fixed;z-index:100;left:50%;bottom:30px;transform:translateX(-50%);box-shadow:0 4px 12px rgba(0,0,0,.2);border-left:5px solid var(--gold)}
+        #toast.show{visibility:visible;animation:fadein .5s,fadeout .5s 2.5s}
+        @keyframes fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
+        @keyframes fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
+        .skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px}
+        @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    </style>
+</head>
+<body>
+<section class="hero-gradient pattern-overlay" style="padding:6rem 1rem;text-align:center;position:relative;">
+    <div style="position:absolute;inset:0;background:rgba(15,39,68,0.9);"></div>
+    <div style="position:relative;z-index:2;">
+        <h1 style="font-size:2.8rem;color:white;font-weight:700;" class="animate-fade-in-up">Our Instructors</h1>
+        <p style="color:var(--gold);font-size:1.1rem;margin-top:0.75rem;" class="animate-fade-in-up stagger-1">Certified &amp; Experienced Driving Professionals</p>
+        <div style="margin-top:2rem;" class="animate-fade-in-up stagger-2">
+            <a href="index.html" class="btn btn-outline btn-lg" style="color:white;border-color:white;">Back to Home</a>
+        </div>
+    </div>
+</section>
+
+<main class="container py-20">
+    <div class="text-center" style="max-width:700px;margin:0 auto 3rem;">
+        <h2 class="text-navy" style="margin-bottom:1rem;font-size:2rem;">Meet The Team</h2>
+        <p class="text-sage" style="font-size:1.1rem;">Our instructors are government-certified and dedicated to producing disciplined, competent drivers.</p>
+    </div>
+    <div id="instructors-grid" class="card-grid">
+        <!-- Skeleton placeholders while loading -->
+        <div class="card"><div class="skeleton" style="width:140px;height:140px;border-radius:50%;margin:0 auto 1.5rem;"></div><div class="skeleton" style="height:24px;margin-bottom:8px;border-radius:4px;"></div><div class="skeleton" style="height:16px;width:70%;margin:0 auto 16px;border-radius:4px;"></div><div class="skeleton" style="height:60px;border-radius:4px;"></div></div>
+        <div class="card"><div class="skeleton" style="width:140px;height:140px;border-radius:50%;margin:0 auto 1.5rem;"></div><div class="skeleton" style="height:24px;margin-bottom:8px;border-radius:4px;"></div><div class="skeleton" style="height:16px;width:70%;margin:0 auto 16px;border-radius:4px;"></div><div class="skeleton" style="height:60px;border-radius:4px;"></div></div>
+    </div>
+</main>
+
+<footer>
+    <p style="font-weight:600;">Transport Services Authority — Central Province Driving School</p>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.875rem;margin-top:0.5rem;">Reg: D.S.860 &nbsp;|&nbsp; Tel: 081 2424372</p>
+    <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin-top:2rem;">&copy; 2026 Transport Services Authority</p>
+</footer>
+
+<div id="toast"><span id="toastMessage"></span></div>
+<script src="api_client.js"></script>
+<script>
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showToast(msg){
+    var t=document.getElementById('toast');
+    document.getElementById('toastMessage').textContent=msg;
+    t.className='show';
+    setTimeout(function(){t.className=t.className.replace('show','');},3000);
+}
+
+async function renderInstructors(){
+    var grid=document.getElementById('instructors-grid');
+    try {
+        var list = await CPTSA.Instructors.list();
+        if(!list.length){
+            grid.innerHTML='<p class="text-sage" style="grid-column:1/-1;text-align:center;padding:2rem;">No instructors listed at this time.</p>';
+            return;
+        }
+        grid.innerHTML = list.map(function(inst){
+            var imgSrc = inst.photo_url || ('https://picsum.photos/seed/'+inst.id+'/300/300');
+            var badges = (inst.badges||[]).map(function(b){ return '<span class="badge">'+escHtml(b)+'</span>'; }).join(' ');
+            return '<div class="card">'
+                +'<div style="width:140px;height:140px;border-radius:50%;overflow:hidden;margin:0 auto 1.5rem;border:4px solid var(--gold);box-shadow:0 4px 8px rgba(0,0,0,.1);">'
+                +'<img src="'+escHtml(imgSrc)+'" alt="'+escHtml(inst.name)+'" style="width:100%;height:100%;object-fit:cover;" onerror="this.src=\'https://via.placeholder.com/140\'">'
+                +'</div>'
+                +'<h3 class="text-navy" style="font-size:1.5rem;margin-bottom:.25rem;">'+escHtml(inst.name)+'</h3>'
+                +'<p class="text-gold font-semibold mb-1" style="font-size:.95rem;">'+escHtml(inst.title||'')+'</p>'
+                +'<div style="margin-bottom:1.5rem;min-height:40px;">'+badges+'</div>'
+                +'<p class="text-sage" style="font-size:.95rem;font-style:italic;">"'+escHtml(inst.bio||'')+'"</p>'
+                +'</div>';
+        }).join('');
+    } catch(e){
+        grid.innerHTML='<p style="color:#e53e3e;grid-column:1/-1;text-align:center;">Failed to load instructors: '+escHtml(e.message)+'</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', renderInstructors);
+</script>
+</body>
+</html>

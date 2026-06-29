@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — Registration System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root{--primary:#2c3e50;--secondary:#3498db;--accent:#27ae60;--danger:#e74c3c;--warning:#f39c12}
+        body{font-family:'Segoe UI',Arial,sans-serif;background:#e9ecef;margin:0;padding:20px;color:#333}
+        .container{max-width:1100px;margin:auto;background:#fff;padding:40px;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.1)}
+        .header-box{text-align:center;margin-bottom:30px;border-bottom:3px solid var(--primary);padding-bottom:10px}
+        .nav-tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+        .tab-btn{padding:10px 20px;cursor:pointer;border:none;background:#ddd;border-radius:5px;font-weight:bold;color:#000;text-decoration:none;display:inline-block}
+        .tab-btn.active,.tab-btn:hover{background:var(--primary);color:#fff}
+        .btn{padding:10px 22px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;margin-top:10px;margin-right:5px}
+        .btn-primary{background:var(--primary);color:#fff}.btn-success{background:var(--accent);color:#fff}
+        .btn-danger{background:var(--danger);color:#fff}.btn-warning{background:var(--warning);color:#fff}
+        .btn-info{background:#17a2b8;color:#fff}.btn-refresh{background:var(--secondary);color:#fff}
+        input,select{padding:6px 8px;border:1px solid #ccc;border-radius:4px;font-size:.9rem}
+        table{width:100%;border-collapse:collapse;margin-top:15px;font-size:.85rem;background:#fff}
+        th,td{padding:10px 12px;border:1px solid #ddd;text-align:left}
+        th{background:var(--primary);color:#fff}
+        tr:hover{background:#f5f5f5}
+        .hidden{display:none}
+        .auth-card{max-width:400px;margin:50px auto;padding:30px;border:1px solid #ddd;border-radius:8px;text-align:center;background:#fff;box-shadow:0 4px 6px rgba(0,0,0,.05)}
+        .status-badge{padding:3px 8px;border-radius:4px;font-size:.75rem;font-weight:bold}
+        .status-pending{background:#ffeaa7;color:#d6a316}.status-complete{background:#55efc4;color:#00b894}
+        .code-settings{background:#fff8e1;border:2px solid var(--warning);border-radius:10px;padding:16px;margin-bottom:24px}
+        .add-panel{background:#f8fff8;border:2px solid var(--accent);border-radius:10px;padding:20px;margin-bottom:24px}
+        .form-group{display:flex;flex-direction:column;margin-bottom:10px}
+        label{font-size:.82rem;font-weight:600;margin-bottom:4px;color:var(--primary)}
+        .section-h{border-bottom:2px solid #eee;padding-bottom:6px;color:var(--secondary);margin-top:30px;margin-bottom:10px;font-size:1.1rem;font-weight:700}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-box">
+        <h1>Driving Training School Registration</h1>
+        <p>Official Admin Management Portal</p>
+    </div>
+
+    <div class="nav-tabs">
+        <a href="index.html" class="tab-btn">🏠 Home</a>
+        <a href="admin.html" class="tab-btn">🔐 Admin Portal</a>
+    </div>
+
+    <!-- ADMIN LOGIN -->
+    <div id="admin-login">
+        <div class="auth-card">
+            <h3>Admin Dashboard Login</h3>
+            <div class="form-group" style="text-align:left;">
+                <label>Password</label>
+                <input type="password" id="adminPass" placeholder="admin123">
+            </div>
+            <button class="btn btn-primary" onclick="adminAuth()">Login</button>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="admin-dashboard" class="hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h2>Admin Management Panel</h2>
+            <div>
+                <button class="btn btn-refresh" onclick="loadData()">↻ Refresh</button>
+                <button class="btn btn-primary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- REG CODE SETTINGS -->
+        <div class="code-settings">
+            <h3>⚙️ Registration Code Settings</h3>
+            <p style="margin:0 0 10px;font-size:.85rem;color:#555;">Change the code students enter to access the registration form.</p>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <div class="form-group" style="min-width:200px;margin-bottom:0;">
+                    <label>Current Code</label>
+                    <input type="text" id="currentCode" readonly style="background:#eee;font-weight:bold;letter-spacing:2px;">
+                </div>
+                <div class="form-group" style="min-width:200px;margin-bottom:0;">
+                    <label>Set New Code</label>
+                    <input type="text" id="newRegCode" placeholder="Enter new code">
+                </div>
+                <div>
+                    <button class="btn btn-warning" onclick="updateRegCode()" style="margin-top:22px;">Update Code</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADD STUDENT -->
+        <div class="add-panel">
+            <h3>➕ Grant Access &amp; Add New Student</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end;">
+                <div class="form-group"><label>Student Name</label><input type="text" id="newStuName" placeholder="Full name with initials"></div>
+                <div class="form-group"><label>Phone Number</label><input type="text" id="newStuPhone" placeholder="07xxxxxxxx"></div>
+                <div class="form-group"><label>Payment Status</label>
+                    <select id="newStuPayment"><option>Paid</option><option>Partial</option><option>Pending</option></select>
+                </div>
+                <div style="display:flex;gap:8px;align-items:flex-end;">
+                    <button class="btn btn-success" onclick="addStudent()" style="margin-top:0;">✔ Add Student</button>
+                </div>
+            </div>
+            <p style="font-size:.75rem;color:#666;margin-top:5px;">* Adding a student creates a portal account. Default password: s + phone number.</p>
+        </div>
+
+        <!-- SECTION 1: APPROVED STUDENTS -->
+        <div class="section-h">1. Approved Students (Access Granted)</div>
+        <div style="overflow-x:auto;">
+            <table id="approvedTable">
+                <thead><tr><th>Name</th><th>Phone</th><th>Payment</th><th>Added On</th><th>Form Status</th><th>Actions</th></tr></thead>
+                <tbody id="approvedBody"></tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 2: SIGN-IN LOGS -->
+        <div class="section-h">2. Recent Sign-Ins</div>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead><tr><th>Timestamp</th><th>Name</th><th>Phone</th><th>Actions</th></tr></thead>
+                <tbody id="signInBody"></tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 3: SUBMITTED FORMS -->
+        <div class="section-h">3. Submitted Registrations</div>
+        <div style="margin-bottom:10px;">
+            <button class="btn btn-success" onclick="exportCSV()">⬇ Export CSV</button>
+        </div>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead><tr><th>Status</th><th>ID No</th><th>Name</th><th>Phone</th><th>Actions</th></tr></thead>
+                <tbody id="formTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="api_client.js"></script>
+<script>
+async function adminAuth() {
+    var pass = document.getElementById('adminPass').value;
+    try {
+        await CPTSA.Auth.adminLogin('admin', pass);
+        document.getElementById('admin-login').classList.add('hidden');
+        document.getElementById('admin-dashboard').classList.remove('hidden');
+        loadData();
+    } catch { alert('Wrong password.'); }
+}
+
+async function logout() {
+    await CPTSA.Auth.logout().catch(() => {});
+    location.reload();
+}
+
+async function loadData() {
+    await Promise.all([loadRegCode(), loadSignInLogs(), loadForms()]);
+}
+
+async function loadRegCode() {
+    try {
+        var res = await CPTSA.Settings.getRegCode();
+        document.getElementById('currentCode').value = res.reg_code;
+    } catch {}
+}
+
+async function updateRegCode() {
+    var code = document.getElementById('newRegCode').value.trim();
+    if (code.length < 4) { alert('Code must be at least 4 characters.'); return; }
+    try {
+        await CPTSA.Settings.setRegCode(code);
+        document.getElementById('currentCode').value = code;
+        document.getElementById('newRegCode').value = '';
+        alert('Registration code updated.');
+    } catch(e) { alert('Error: ' + e.message); }
+}
+
+async function addStudent() {
+    var name    = document.getElementById('newStuName').value.trim();
+    var phone   = document.getElementById('newStuPhone').value.trim();
+    var payment = document.getElementById('newStuPayment').value;
+    if (!name || !/^\d{10}$/.test(phone)) { alert('Enter a valid name and 10-digit phone.'); return; }
+
+    try {
+        // Create student in main DB via API
+        await CPTSA.Students.create({
+            nic:       phone,         // temporary NIC = phone until form filled
+            phone,
+            last_name: name,
+            name_init: name,
+            password:  's' + phone,
+            vehicles:  [],
+        });
+        alert(`Student added.\nDefault Password: s${phone}\n\nPlease update their license categories in Admin Portal → Students.`);
+        document.getElementById('newStuName').value  = '';
+        document.getElementById('newStuPhone').value = '';
+        // Also log in approved list (local table for display)
+        loadData();
+    } catch(e) { alert('Error: ' + e.message); }
+}
+
+async function loadSignInLogs() {
+    try {
+        var logs = await CPTSA.Settings.signinLogs();
+        var tbody = document.getElementById('signInBody');
+        tbody.innerHTML = logs.length
+            ? logs.slice(0, 15).map(l =>
+                `<tr><td>${new Date(l.signed_at).toLocaleString()}</td><td>${escHtml(l.name)}</td><td>${escHtml(l.phone)}</td>
+                 <td><button style="padding:4px 8px;background:var(--danger);color:#fff;border:none;border-radius:4px;cursor:pointer;" onclick="deleteLog(${l.id})">Delete</button></td></tr>`
+            ).join('')
+            : '<tr><td colspan="4" style="text-align:center;color:#999;">No sign-ins yet.</td></tr>';
+    } catch {}
+}
+
+async function deleteLog(id) {
+    if (!confirm('Delete this log?')) return;
+    try { await CPTSA.Settings.deleteLog(id); loadSignInLogs(); } catch(e) { alert(e.message); }
+}
+
+async function loadForms() {
+    try {
+        var forms = await CPTSA.Settings.formList();
+        var tbody = document.getElementById('formTableBody');
+        tbody.innerHTML = forms.length
+            ? forms.map(f => {
+                var cls = f.form_status === 'Submitted' ? 'status-complete' : 'status-pending';
+                return `<tr>
+                    <td><span class="status-badge ${cls}">${f.form_status}</span></td>
+                    <td>${escHtml(f.id_no || '—')}</td>
+                    <td>${escHtml(f.name_init || '—')}</td>
+                    <td>${escHtml(f.phone || '—')}</td>
+                    <td>
+                        <button class="btn-warning" style="padding:4px 8px;border:none;border-radius:4px;cursor:pointer;" onclick="viewForm(${f.id})">View</button>
+                        <button style="padding:4px 8px;background:var(--danger);color:#fff;border:none;border-radius:4px;cursor:pointer;" onclick="deleteForm(${f.id})">Delete</button>
+                    </td>
+                </tr>`;
+            }).join('')
+            : '<tr><td colspan="5" style="text-align:center;color:#999;">No submitted registrations yet.</td></tr>';
+    } catch {}
+}
+
+async function viewForm(id) {
+    try {
+        var form = await CPTSA.Settings.formGet({ id });
+        var info = Object.entries(form)
+            .filter(([k,v]) => v && !['id','created_at','updated_at'].includes(k))
+            .map(([k,v]) => `<tr><td style="font-weight:600;width:40%;">${k.replace(/_/g,' ')}</td><td>${escHtml(v)}</td></tr>`)
+            .join('');
+        var win = window.open('', '_blank');
+        win.document.write(`<html><head><title>Registration Form</title></head><body>
+            <h2>Registration: ${form.name_init || form.phone}</h2>
+            <table style="width:100%;border-collapse:collapse;font-family:sans-serif;font-size:14px;">
+            <tbody>${info}</tbody></table></body></html>`);
+    } catch(e) { alert('Error: ' + e.message); }
+}
+
+async function deleteForm(id) {
+    if (!confirm('Delete this registration form?')) return;
+    try { await CPTSA.Settings.formDelete(id); loadForms(); } catch(e) { alert(e.message); }
+}
+
+async function exportCSV() {
+    try {
+        var forms = await CPTSA.Settings.formList();
+        if (!forms.length) { alert('No records to export.'); return; }
+        var cols = ['form_status','id_no','name_init','phone','address','amount','cashier'];
+        var csv  = cols.join(',') + '\n';
+        forms.forEach(f => { csv += cols.map(c => '"' + (f[c] || '').toString().replace(/"/g,'""') + '"').join(',') + '\n'; });
+        var a = document.createElement('a');
+        a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+        a.download = 'School_Registrations.csv';
+        a.click();
+    } catch(e) { alert(e.message); }
+}
+
+function escHtml(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        var session = await CPTSA.Auth.session();
+        if (session && session.role === 'admin') {
+            document.getElementById('admin-login').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            loadData();
+        }
+    } catch {}
+});
+</script>
+</body>
+</html>

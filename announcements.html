@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements — Transport Services Authority</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav.js"></script>
+</head>
+<body>
+<div id="navbar-container"></div>
+
+<section class="hero-gradient pattern-overlay" style="padding:5rem 1rem;text-align:center;position:relative;">
+    <div style="position:absolute;inset:0;background:rgba(15,39,68,0.9);"></div>
+    <div style="position:relative;z-index:2;">
+        <h1 style="font-size:2.8rem;color:white;font-weight:700;" class="animate-fade-in-up">Announcements</h1>
+        <p style="color:var(--gold);font-size:1.1rem;margin-top:0.75rem;" class="animate-fade-in-up stagger-1">Important notices and updates</p>
+        <div style="margin-top:1.5rem;" class="animate-fade-in-up stagger-2">
+            <a href="index.html" class="btn btn-outline btn-lg" style="color:white;border-color:white;">Back to Home</a>
+        </div>
+    </div>
+</section>
+
+<section class="py-20 max-w-4xl mx-auto px-4">
+    <div id="loadingState" style="text-align:center;padding:3rem;color:var(--sage);">
+        <div style="font-size:2rem;margin-bottom:1rem;">⏳</div>
+        <p>Loading announcements…</p>
+    </div>
+    <div id="announcementsList" style="display:flex;flex-direction:column;gap:1.25rem;"></div>
+    <p id="noAnn" class="text-sage" style="text-align:center;display:none;padding:3rem 0;">No announcements yet. Check back later.</p>
+</section>
+
+<footer>
+    <p style="font-weight:600;">Transport Services Authority — Central Province Driving School</p>
+    <p style="color:rgba(255,255,255,0.6);font-size:0.875rem;margin-top:0.5rem;">Reg: D.S.860 &nbsp;|&nbsp; Tel: 081 2424372</p>
+    <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin-top:1rem;">&copy; 2026 Transport Services Authority</p>
+</footer>
+
+<div id="toast"><span id="toastMessage"></span></div>
+<script src="api_client.js"></script>
+<script>
+function escHtml(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+document.addEventListener('DOMContentLoaded', async function () {
+    var loading = document.getElementById('loadingState');
+    var list    = document.getElementById('announcementsList');
+    var noAnn   = document.getElementById('noAnn');
+    try {
+        var ann = await CPTSA.Announcements.list();
+        loading.style.display = 'none';
+        if (!ann.length) { noAnn.style.display = 'block'; return; }
+        list.innerHTML = ann.map(function(a, i) {
+            var d = new Date(a.posted_at).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+            return '<div class="card section-reveal" style="animation-delay:'+(i*0.08)+'s;">'
+                +'<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">'
+                +'<h3 style="font-size:1.2rem;font-weight:700;color:var(--navy);">'+escHtml(a.title)+'</h3>'
+                +'<span class="badge badge-info">'+escHtml(d)+'</span></div>'
+                +'<p class="text-sage" style="line-height:1.7;">'+escHtml(a.content)+'</p></div>';
+        }).join('');
+        var io = new IntersectionObserver(function(entries){
+            entries.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);} });
+        },{threshold:0.1});
+        document.querySelectorAll('.section-reveal').forEach(function(el){io.observe(el);});
+    } catch(err) {
+        loading.innerHTML = '<p style="color:#e53e3e;">Failed to load: '+escHtml(err.message)+'</p>';
+    }
+});
+</script>
+</body>
+</html>

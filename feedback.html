@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Reviews — CPTSA Driving School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--navy:#0f2744;--gold:#c9a227;--cream:#f8f6f3;--sage:#4a5d4e;--white:#fff}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Source Sans Pro',sans-serif;background:var(--cream);color:var(--navy);line-height:1.6}
+        h1,h2,h3,h4{font-family:'Playfair Display',serif}
+        .main-nav{position:sticky;top:0;z-index:1000;background:var(--navy);box-shadow:0 4px 10px rgba(0,0,0,.2);border-bottom:3px solid var(--gold)}
+        .nav-container{max-width:1280px;margin:0 auto;padding:0 1.5rem;height:80px;display:flex;justify-content:space-between;align-items:center}
+        .brand-logo{display:flex;align-items:center;gap:12px;color:#fff;font-family:'Playfair Display',serif;font-weight:700;font-size:1.4rem;text-decoration:none}
+        .nav-links{display:flex;gap:2rem}
+        .nav-link{color:rgba(255,255,255,.85);font-weight:600;font-size:.95rem;text-transform:uppercase;position:relative;padding:5px 0;text-decoration:none}
+        .nav-link:hover{color:var(--gold)}
+        .page-hero{background:linear-gradient(135deg,var(--navy),#1e3a5f);padding:4rem 1rem 3rem;text-align:center;position:relative}
+        .page-hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(201,162,39,.07) 1px,transparent 1px);background-size:24px 24px}
+        .page-hero-inner{position:relative;z-index:2;max-width:700px;margin:0 auto}
+        .section-divider{width:60px;height:3px;background:var(--gold);margin:.5rem auto 1rem;border-radius:2px}
+        .page-body{max-width:1200px;margin:0 auto;padding:2.5rem 1rem 4rem;display:grid;grid-template-columns:300px 1fr;gap:2rem;align-items:start}
+        @media(max-width:920px){.page-body{grid-template-columns:1fr}}
+        .sidebar{display:flex;flex-direction:column;gap:1.5rem}
+        .sidebar-card{background:#fff;border-radius:14px;padding:1.75rem;box-shadow:0 2px 4px rgba(0,0,0,.08);border:1px solid rgba(15,39,68,.06)}
+        .sidebar-card h3{font-size:1.05rem;color:var(--navy);margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:2px solid var(--cream)}
+        .big-score{text-align:center;margin-bottom:1.25rem}
+        .big-score-num{font-family:'Playfair Display',serif;font-size:4rem;font-weight:700;color:var(--navy);line-height:1}
+        .big-stars{display:flex;justify-content:center;gap:4px;margin:.4rem 0}
+        .big-star{font-size:1.5rem;color:#ddd}
+        .big-star.on{color:var(--gold)}
+        .breakdown-row{display:flex;align-items:center;gap:8px;margin-bottom:.5rem;cursor:pointer}
+        .bd-label{color:var(--sage);font-size:.8rem;width:28px;text-align:right;flex-shrink:0}
+        .bd-track{flex:1;height:8px;background:var(--cream);border-radius:10px;overflow:hidden}
+        .bd-fill{height:100%;background:var(--gold);border-radius:10px;transition:width .8s ease}
+        .bd-count{color:rgba(15,39,68,.4);font-size:.78rem;width:18px}
+        .filter-group{margin-bottom:1rem}
+        .filter-group label{display:block;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(15,39,68,.5);margin-bottom:.4rem}
+        .filter-group select,.filter-group input{width:100%;padding:.6rem .75rem;border:1.5px solid rgba(15,39,68,.1);border-radius:7px;font-family:'Source Sans Pro',sans-serif;font-size:.9rem;color:var(--navy);background:var(--cream);outline:none}
+        .filter-group select:focus,.filter-group input:focus{border-color:var(--gold)}
+        .cat-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:.5rem}
+        .cat-chip{padding:.3rem .75rem;border-radius:20px;font-size:.78rem;font-weight:600;border:1.5px solid rgba(15,39,68,.12);background:var(--cream);color:var(--sage);cursor:pointer;transition:all .3s}
+        .cat-chip:hover,.cat-chip.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+        .clear-btn{width:100%;padding:.6rem;background:transparent;border:1.5px solid rgba(15,39,68,.12);border-radius:7px;font-family:'Source Sans Pro',sans-serif;font-size:.85rem;color:var(--sage);cursor:pointer}
+        .clear-btn:hover{border-color:var(--gold);color:var(--navy)}
+        .reviews-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem}
+        .reviews-header h2{font-size:1.5rem;color:var(--navy)}
+        .result-count{color:var(--sage);font-size:.9rem}
+        .sort-select{padding:.5rem .9rem;border:1.5px solid rgba(15,39,68,.12);border-radius:7px;font-family:'Source Sans Pro',sans-serif;font-size:.875rem;color:var(--navy);background:#fff;outline:none;cursor:pointer}
+        .reviews-grid{display:flex;flex-direction:column;gap:1.25rem}
+        .review-card{background:#fff;border-radius:12px;padding:1.5rem 1.75rem;box-shadow:0 2px 4px rgba(0,0,0,.08);border:1px solid rgba(15,39,68,.06);border-left:4px solid var(--gold);transition:all .3s;animation:cardIn .35s ease forwards;opacity:0;transform:translateY(10px)}
+        @keyframes cardIn{to{opacity:1;transform:translateY(0)}}
+        .review-card:hover{box-shadow:0 6px 20px rgba(15,39,68,.12);transform:translateY(-3px)}
+        .review-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem}
+        .reviewer-info{display:flex;align-items:center;gap:12px}
+        .reviewer-avatar{width:44px;height:44px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold);flex-shrink:0}
+        .reviewer-name{font-weight:700;color:var(--navy);font-size:1rem}
+        .reviewer-meta{color:var(--sage);font-size:.8rem;margin-top:1px}
+        .review-rating-badge{display:inline-flex;align-items:center;gap:4px;background:var(--cream);border-radius:20px;padding:.3rem .75rem}
+        .badge-num{font-weight:700;color:var(--navy);font-size:.875rem}
+        .review-body{color:#374151;font-size:.95rem;line-height:1.65;margin-bottom:.75rem}
+        .review-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+        .review-category{display:inline-block;padding:.2rem .7rem;background:rgba(15,39,68,.06);border-radius:4px;font-size:.75rem;font-weight:600;color:var(--sage);text-transform:uppercase}
+        .review-date{color:rgba(15,39,68,.35);font-size:.78rem}
+        .empty-state{text-align:center;padding:4rem 2rem;background:#fff;border-radius:12px}
+        .pagination{display:flex;justify-content:center;gap:6px;margin-top:2rem;flex-wrap:wrap}
+        .page-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1.5px solid rgba(15,39,68,.12);background:#fff;color:var(--navy);font-weight:600;font-size:.875rem;cursor:pointer;transition:all .3s}
+        .page-btn:hover,.page-btn.active{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+        .star-badge{display:inline-block;padding:.2rem .6rem;background:rgba(201,162,39,.15);border-radius:12px;font-size:.78rem;color:var(--gold);font-weight:600;margin-left:.5rem}
+        footer{background:var(--navy);color:#fff;text-align:center;padding:3rem 1rem;border-top:4px solid var(--gold)}
+    </style>
+</head>
+<body>
+
+<nav class="main-nav">
+    <div class="nav-container">
+        <a href="index.html" class="brand-logo">
+            <img src="https://tsa.cp.gov.lk/live_tracking/img/cptsa_logo.png" alt="CPTSA" style="height:45px;width:auto;object-fit:contain;">
+            <span>CPTSA</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="services.html" class="nav-link">Services</a>
+            <a href="instructor.html" class="nav-link">Instructors</a>
+            <a href="announcements.html" class="nav-link">Announcements</a>
+            <a href="about.html" class="nav-link">About</a>
+        </div>
+    </div>
+</nav>
+
+<div class="page-hero">
+    <div class="page-hero-inner">
+        <p style="color:var(--gold);font-size:.8rem;text-transform:uppercase;letter-spacing:2px;font-weight:600;margin-bottom:.5rem;">Transparency &amp; Trust</p>
+        <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);color:#fff;margin-bottom:.5rem;">Student Reviews</h1>
+        <div class="section-divider"></div>
+        <p style="color:rgba(255,255,255,.55);font-size:1rem;margin-bottom:1.5rem;">Read genuine reviews from our students.</p>
+        <a href="index.html#feedback" style="display:inline-flex;align-items:center;gap:6px;color:var(--gold);font-size:.875rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;border:1.5px solid rgba(201,162,39,.35);padding:.5rem 1.1rem;border-radius:5px;text-decoration:none;">← Leave a Review</a>
+    </div>
+</div>
+
+<div class="page-body">
+    <aside class="sidebar">
+        <div class="sidebar-card">
+            <h3>Overall Rating</h3>
+            <div class="big-score">
+                <div class="big-score-num" id="sideAvg">—</div>
+                <div style="color:rgba(15,39,68,.35);font-size:1rem;">out of 5</div>
+                <div class="big-stars" id="sideBigStars">
+                    <span class="big-star">★</span><span class="big-star">★</span><span class="big-star">★</span><span class="big-star">★</span><span class="big-star">★</span>
+                </div>
+                <div style="color:var(--sage);font-size:.85rem;" id="sideTotalCount">Loading…</div>
+            </div>
+            <div id="sideBreakdown">
+                <div class="breakdown-row" onclick="filterByStar(5)"><span class="bd-label">5 ★</span><div class="bd-track"><div class="bd-fill" id="sBar5" style="width:0%"></div></div><span class="bd-count" id="sCnt5">0</span></div>
+                <div class="breakdown-row" onclick="filterByStar(4)"><span class="bd-label">4 ★</span><div class="bd-track"><div class="bd-fill" id="sBar4" style="width:0%"></div></div><span class="bd-count" id="sCnt4">0</span></div>
+                <div class="breakdown-row" onclick="filterByStar(3)"><span class="bd-label">3 ★</span><div class="bd-track"><div class="bd-fill" id="sBar3" style="width:0%"></div></div><span class="bd-count" id="sCnt3">0</span></div>
+                <div class="breakdown-row" onclick="filterByStar(2)"><span class="bd-label">2 ★</span><div class="bd-track"><div class="bd-fill" id="sBar2" style="width:0%"></div></div><span class="bd-count" id="sCnt2">0</span></div>
+                <div class="breakdown-row" onclick="filterByStar(1)"><span class="bd-label">1 ★</span><div class="bd-track"><div class="bd-fill" id="sBar1" style="width:0%"></div></div><span class="bd-count" id="sCnt1">0</span></div>
+            </div>
+            <p style="color:rgba(15,39,68,.35);font-size:.72rem;text-align:center;margin-top:.75rem;">Click a bar to filter by stars</p>
+        </div>
+        <div class="sidebar-card">
+            <h3>Filter &amp; Search</h3>
+            <div class="filter-group"><label>Search Keyword</label><input type="text" id="searchInput" placeholder="e.g. instructor, helpful…" oninput="applyFilters()"></div>
+            <div class="filter-group">
+                <label>Category</label>
+                <div class="cat-chips" id="catChips">
+                    <span class="cat-chip active" data-cat="">All</span>
+                    <span class="cat-chip" data-cat="Instructor Quality">Instructor Quality</span>
+                    <span class="cat-chip" data-cat="Vehicle Condition">Vehicle Condition</span>
+                    <span class="cat-chip" data-cat="Schedule & Flexibility">Schedule</span>
+                    <span class="cat-chip" data-cat="Office & Admin">Office</span>
+                    <span class="cat-chip" data-cat="Overall Experience">Overall</span>
+                    <span class="cat-chip" data-cat="Other">Other</span>
+                </div>
+            </div>
+            <div class="filter-group" style="margin-top:.75rem;"><label>Minimum Rating</label>
+                <select id="minRating" onchange="applyFilters()">
+                    <option value="0">All ratings</option>
+                    <option value="4">4 stars &amp; above</option>
+                    <option value="3">3 stars &amp; above</option>
+                    <option value="2">2 stars &amp; above</option>
+                </select>
+            </div>
+            <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
+        </div>
+    </aside>
+
+    <main>
+        <div class="reviews-header">
+            <div>
+                <h2>All Reviews <span id="starBadge" class="star-badge" style="display:none;"></span></h2>
+                <div class="result-count" id="resultCount">Loading…</div>
+            </div>
+            <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="highest">Highest Rated</option>
+                <option value="lowest">Lowest Rated</option>
+            </select>
+        </div>
+        <div class="reviews-grid" id="reviewsGrid"></div>
+        <div class="pagination" id="pagination"></div>
+    </main>
+</div>
+
+<footer>
+    <p style="margin-bottom:.5rem;font-weight:600;font-size:1.1rem;">Transport Services Authority — Central Province Driving Training School</p>
+    <p style="color:rgba(255,255,255,.6);font-size:.875rem;">Reg: D.S.860 &nbsp;|&nbsp; Tel: 081 2424372 &nbsp;|&nbsp; Kandy, Sri Lanka</p>
+    <p style="margin-top:1rem;color:rgba(255,255,255,.4);font-size:.8rem;">&copy; 2026 Transport Services Authority, Central Province</p>
+</footer>
+
+<script src="api_client.js"></script>
+<script>
+var PER_PAGE=8, currentPage=1, activeStar=0, activeCategory='';
+var allFeedbacks=[];
+
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function getInitials(n){ var p=n.trim().split(' '); return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():n.slice(0,2).toUpperCase(); }
+function formatDate(iso){ try{ return new Date(iso).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}); }catch(e){return '';} }
+function starsHtml(r,sz){ sz=sz||'1rem'; var s=''; for(var i=1;i<=5;i++) s+='<span style="color:'+(i<=r?'var(--gold)':'#ddd')+';font-size:'+sz+'">★</span>'; return s; }
+
+async function loadSummary(){
+    try {
+        var s = await CPTSA.Feedback.summary();
+        document.getElementById('sideAvg').textContent = s.total ? s.average : '—';
+        document.getElementById('sideTotalCount').textContent = s.total ? (s.total+' review'+(s.total===1?'':'s')) : 'No reviews yet';
+        var stars = document.querySelectorAll('#sideBigStars .big-star');
+        stars.forEach(function(el,i){ el.classList.toggle('on', i < Math.round(s.average)); });
+        [1,2,3,4,5].forEach(function(n){
+            var pct = s.total ? Math.round((s.counts[n]||0)/s.total*100) : 0;
+            document.getElementById('sBar'+n).style.width = pct+'%';
+            document.getElementById('sCnt'+n).textContent = s.counts[n]||0;
+        });
+    } catch(e){ document.getElementById('sideTotalCount').textContent='Failed to load'; }
+}
+
+async function loadFeedbacks(){
+    try { allFeedbacks = await CPTSA.Feedback.list(); } catch(e){ allFeedbacks=[]; }
+    applyFilters();
+}
+
+function getFiltered(){
+    var keyword  = (document.getElementById('searchInput').value||'').toLowerCase().trim();
+    var minRating= parseInt(document.getElementById('minRating').value)||0;
+    var sort     = document.getElementById('sortSelect').value;
+    var list = allFeedbacks.filter(function(f){
+        if(activeStar>0 && f.rating!==activeStar) return false;
+        if(activeCategory && f.category!==activeCategory) return false;
+        if(minRating && f.rating<minRating) return false;
+        if(keyword){ var h=(f.reviewer_name+' '+f.message+' '+f.category).toLowerCase(); if(!h.includes(keyword)) return false; }
+        return true;
+    });
+    list.sort(function(a,b){
+        if(sort==='newest')  return new Date(b.posted_at)-new Date(a.posted_at);
+        if(sort==='oldest')  return new Date(a.posted_at)-new Date(b.posted_at);
+        if(sort==='highest') return b.rating-a.rating||(new Date(b.posted_at)-new Date(a.posted_at));
+        if(sort==='lowest')  return a.rating-b.rating||(new Date(b.posted_at)-new Date(a.posted_at));
+        return 0;
+    });
+    return list;
+}
+
+function applyFilters(){ currentPage=1; renderReviews(); }
+
+function filterByStar(n){
+    activeStar = (activeStar===n)?0:n;
+    var badge=document.getElementById('starBadge');
+    if(activeStar>0){ badge.textContent=activeStar+' ★ only'; badge.style.display='inline-block'; }
+    else badge.style.display='none';
+    applyFilters();
+}
+
+function renderReviews(){
+    var filtered=getFiltered(), total=filtered.length;
+    var totalPages=Math.max(1,Math.ceil(total/PER_PAGE));
+    if(currentPage>totalPages) currentPage=totalPages;
+    var page=filtered.slice((currentPage-1)*PER_PAGE, currentPage*PER_PAGE);
+    var all=allFeedbacks.length;
+    document.getElementById('resultCount').textContent=total===all&&total>0?'Showing all '+total+' review'+(total===1?'':'s'):total+' of '+all+' review'+(all===1?'':'s');
+    var avColors=['#0f2744','#1a3b61','#2d4a6e','#3b5998','#4a6fa5'];
+    var grid=document.getElementById('reviewsGrid');
+    if(!page.length){
+        grid.innerHTML='<div class="empty-state"><div style="font-size:3rem;margin-bottom:1rem;">💬</div><h3>No reviews found</h3><p style="color:var(--sage);">Try adjusting your filters.</p></div>';
+    } else {
+        grid.innerHTML=page.map(function(f,idx){
+            var initials=getInitials(f.reviewer_name||'An');
+            return '<div class="review-card" style="animation-delay:'+(idx*.05)+'s">'
+                +'<div class="review-top">'
+                +'<div class="reviewer-info">'
+                +'<div class="reviewer-avatar" style="background:'+avColors[idx%5]+'">'+escHtml(initials)+'</div>'
+                +'<div><div class="reviewer-name">'+escHtml(f.reviewer_name||'Anonymous')+'</div>'
+                +'<div class="reviewer-meta">'+escHtml(f.category)+'</div></div></div>'
+                +'<div class="review-rating-badge">'+starsHtml(f.rating,'.9rem')+'<span class="badge-num">'+f.rating+'.0</span></div>'
+                +'</div>'
+                +'<p class="review-body">'+escHtml(f.message)+'</p>'
+                +'<div class="review-footer">'
+                +'<span class="review-category">'+escHtml(f.category)+'</span>'
+                +'<span class="review-date">'+formatDate(f.posted_at)+'</span>'
+                +'</div></div>';
+        }).join('');
+    }
+    renderPagination(totalPages);
+}
+
+function renderPagination(total){
+    var el=document.getElementById('pagination');
+    if(total<=1){el.innerHTML='';return;}
+    var html='';
+    if(currentPage>1) html+='<button class="page-btn" onclick="goPage('+(currentPage-1)+')">‹</button>';
+    var s=Math.max(1,currentPage-2), e=Math.min(total,currentPage+2);
+    if(s>1) html+='<button class="page-btn" onclick="goPage(1)">1</button>'+(s>2?'<span style="padding:0 4px;color:var(--sage)">…</span>':'');
+    for(var i=s;i<=e;i++) html+='<button class="page-btn'+(i===currentPage?' active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
+    if(e<total) html+=(e<total-1?'<span style="padding:0 4px;color:var(--sage)">…</span>':'')+'<button class="page-btn" onclick="goPage('+total+')">'+total+'</button>';
+    if(currentPage<total) html+='<button class="page-btn" onclick="goPage('+(currentPage+1)+')">›</button>';
+    el.innerHTML=html;
+}
+
+function goPage(n){ currentPage=n; renderReviews(); document.querySelector('.page-body').scrollIntoView({behavior:'smooth',block:'start'}); }
+
+document.querySelectorAll('.cat-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+        document.querySelectorAll('.cat-chip').forEach(function(c){c.classList.remove('active');});
+        chip.classList.add('active');
+        activeCategory=chip.dataset.cat;
+        applyFilters();
+    });
+});
+
+function clearFilters(){
+    activeStar=0; activeCategory='';
+    document.getElementById('searchInput').value='';
+    document.getElementById('minRating').value='0';
+    document.getElementById('sortSelect').value='newest';
+    document.getElementById('starBadge').style.display='none';
+    document.querySelectorAll('.cat-chip').forEach(function(c){c.classList.remove('active');});
+    document.querySelector('.cat-chip[data-cat=""]').classList.add('active');
+    applyFilters();
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+    loadSummary();
+    loadFeedbacks();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documents — Admin Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--navy:#1a202c;--gold:#c9a227;--sage:#718096;--cream:#fffbf0;--border:#e2e8f0;--danger:#e53e3e}
+        body{font-family:'Source Sans Pro',sans-serif;background:#f7fafc;color:var(--navy);margin:0;line-height:1.5}
+        h1,h2,h3,h4,h5{font-family:'Playfair Display',serif;margin:0 0 .5rem}
+        .card{background:#fff;border-radius:1rem;padding:1.5rem;box-shadow:0 4px 6px -1px rgba(0,0,0,.05);border:1px solid var(--border);margin-bottom:1rem}
+        .btn{display:inline-flex;align-items:center;justify-content:center;padding:.5rem 1rem;border-radius:.375rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-size:.95rem;text-decoration:none}
+        .btn-primary{background:var(--navy);color:#fff}.btn-secondary{background:var(--gold);color:#fff}
+        .btn-danger{background:var(--danger);color:#fff}.btn-sm{padding:.25rem .75rem;font-size:.85rem}
+        .form-control{width:100%;padding:.6rem;border:1px solid var(--border);border-radius:.375rem;font-size:1rem;box-sizing:border-box}
+        .form-group{margin-bottom:1rem}.form-group label{display:block;margin-bottom:.35rem;font-weight:600;font-size:.9rem;color:var(--navy)}
+        .text-sage{color:var(--sage)}.text-sm{font-size:.875rem}.text-xs{font-size:.75rem}
+        .portal-page{max-width:900px;margin:0 auto;padding:2rem 1rem}
+        .portal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+        .upload-area{border:2px dashed var(--border);border-radius:.75rem;padding:2rem;text-align:center;cursor:pointer;transition:border-color .3s}
+        .upload-area:hover,.upload-area.drag{border-color:var(--gold);background:#fffbf0}
+        #toast{visibility:hidden;min-width:250px;background:#333;color:#fff;text-align:center;border-radius:4px;padding:16px;position:fixed;z-index:1000;left:50%;bottom:30px;transform:translateX(-50%)}
+        #toast.show{visibility:visible;animation:fadein .5s,fadeout .5s 2.5s}
+        @keyframes fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
+        @keyframes fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
+    </style>
+</head>
+<body>
+<div id="authCheck" style="padding:2rem;text-align:center;font-size:1.2rem;color:var(--sage);">Verifying access…</div>
+
+<div id="portalContent" style="display:none;">
+    <div class="portal-page">
+        <div class="portal-header">
+            <div style="display:flex;align-items:center;gap:1rem;">
+                <div style="width:56px;height:56px;border-radius:50%;background:#e2e8f0;flex-shrink:0;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.6rem;">📄</div>
+                <div>
+                    <div style="font-size:1.1rem;font-weight:700;">Documents</div>
+                    <div style="font-size:.8rem;opacity:.75;">Manage Fee Structures &amp; Files</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:.5rem;align-items:center;">
+                <a href="admin.html" class="btn btn-primary btn-sm">← Admin Portal</a>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h4 style="font-weight:700;margin-bottom:1rem;">Upload Document</h4>
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('docFileInput').click()"
+                 ondragover="e=>{e.preventDefault();this.classList.add('drag')}"
+                 ondragleave="this.classList.remove('drag')"
+                 ondrop="handleDrop(event)">
+                <div style="font-size:2rem;margin-bottom:.5rem;">📂</div>
+                <p style="font-weight:600;margin:0;">Click or drag files here</p>
+                <span class="text-sage text-sm">PDF, DOC, DOCX, JPG, PNG — max 10 MB</span>
+                <input type="file" id="docFileInput" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display:none;" onchange="handleUpload(this.files[0])">
+            </div>
+            <div id="uploadProgress" style="display:none;margin-top:1rem;">
+                <div style="background:#e2e8f0;border-radius:4px;height:8px;overflow:hidden;">
+                    <div id="progressBar" style="height:100%;background:var(--gold);width:0%;transition:width .3s;"></div>
+                </div>
+                <p class="text-sage text-sm" style="margin-top:.4rem;">Uploading…</p>
+            </div>
+        </div>
+
+        <div id="docList" style="display:flex;flex-direction:column;gap:.75rem;"></div>
+    </div>
+</div>
+
+<div id="toast"><span id="toastMsg"></span></div>
+<script src="api_client.js"></script>
+<script>
+function showToast(msg) {
+    var t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = 'show';
+    setTimeout(() => { t.className = ''; }, 3000);
+}
+
+async function logout() {
+    await CPTSA.Auth.logout().catch(() => {});
+    window.location.href = 'admin.html';
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('uploadArea').classList.remove('drag');
+    var file = e.dataTransfer.files[0];
+    if (file) handleUpload(file);
+}
+
+async function handleUpload(file) {
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) { showToast('File too large (max 10 MB).'); return; }
+
+    var prog = document.getElementById('uploadProgress');
+    var bar  = document.getElementById('progressBar');
+    prog.style.display = 'block';
+    bar.style.width = '30%';
+
+    try {
+        await CPTSA.Documents.upload(file);
+        bar.style.width = '100%';
+        setTimeout(() => { prog.style.display = 'none'; bar.style.width = '0%'; }, 600);
+        showToast('✅ File uploaded successfully.');
+        document.getElementById('docFileInput').value = '';
+        renderDocs();
+    } catch(e) {
+        prog.style.display = 'none';
+        showToast('Upload failed: ' + e.message);
+    }
+}
+
+async function renderDocs() {
+    var c = document.getElementById('docList');
+    try {
+        var docs = await CPTSA.Documents.list();
+        c.innerHTML = docs.length
+            ? docs.map(d =>
+                `<div class="card" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;">
+                    <div style="display:flex;align-items:center;gap:.75rem;">
+                        <span style="font-size:1.5rem;">${getIcon(d.mime_type)}</span>
+                        <div>
+                            <div style="font-weight:600;">${escHtml(d.name)}</div>
+                            <div class="text-sage text-xs">${formatSize(d.file_size)} · ${new Date(d.uploaded_at).toLocaleDateString()}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:.5rem;">
+                        <a href="${CPTSA.Documents.downloadUrl(d.id)}" class="btn btn-secondary btn-sm">⬇ Download</a>
+                        <button class="btn btn-danger btn-sm" onclick="deleteDoc(${d.id})">Delete</button>
+                    </div>
+                </div>`
+            ).join('')
+            : '<div class="card"><p class="text-sage text-sm" style="text-align:center;">No documents uploaded yet.</p></div>';
+    } catch(e) {
+        c.innerHTML = `<div class="card"><p style="color:var(--danger)">Failed to load: ${e.message}</p></div>`;
+    }
+}
+
+async function deleteDoc(id) {
+    if (!confirm('Delete this file?')) return;
+    try {
+        await CPTSA.Documents.delete(id);
+        showToast('Deleted.');
+        renderDocs();
+    } catch(e) { showToast('Error: ' + e.message); }
+}
+
+function getIcon(mime) {
+    if (mime?.includes('pdf')) return '📕';
+    if (mime?.includes('word') || mime?.includes('doc')) return '📝';
+    if (mime?.includes('image')) return '🖼️';
+    return '📄';
+}
+
+function formatSize(bytes) {
+    if (!bytes) return '—';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+}
+
+function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        var session = await CPTSA.Auth.session();
+        if (session && session.role === 'admin') {
+            document.getElementById('authCheck').style.display = 'none';
+            document.getElementById('portalContent').style.display = 'block';
+            renderDocs();
+        } else {
+            document.getElementById('authCheck').textContent = 'Access Denied. Redirecting…';
+            setTimeout(() => window.location.href = 'admin.html', 1200);
+        }
+    } catch {
+        document.getElementById('authCheck').textContent = 'Access Denied. Redirecting…';
+        setTimeout(() => window.location.href = 'admin.html', 1200);
+    }
+});
+</script>
+</body>
+</html>

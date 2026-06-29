@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Access — Registration System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root{--primary:#2c3e50;--secondary:#3498db;--accent:#27ae60;--danger:#e74c3c;--warning:#f39c12}
+        body{font-family:'Segoe UI',Arial,sans-serif;background:#e9ecef;margin:0;padding:20px;color:#333}
+        .container{max-width:900px;margin:auto;background:#fff;padding:30px;border-radius:12px;box-shadow:0 10px 25px rgba(0,0,0,.1)}
+        .header-box{text-align:center;margin-bottom:30px;border-bottom:3px solid var(--primary);padding-bottom:10px}
+        .nav-tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+        .tab-btn{padding:10px 20px;cursor:pointer;border:none;background:#ddd;border-radius:5px;font-weight:bold;color:#000}
+        .tab-btn.active{background:var(--primary);color:#fff}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+        .full-width{grid-column:1/-1}
+        .form-group{display:flex;flex-direction:column}
+        label{font-size:.82rem;font-weight:600;margin-bottom:4px;color:var(--primary)}
+        input,select,textarea{padding:6px 8px;border:1px solid #ccc;border-radius:4px;font-size:.9rem}
+        input:disabled,select:disabled,textarea:disabled{background:#f8f9fa;color:#6c757d;cursor:not-allowed}
+        .required::after{content:" *";color:var(--danger)}
+        .btn{padding:10px 22px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;margin-top:10px;margin-right:5px}
+        .btn-primary{background:var(--primary);color:#fff}.btn-save{background:#6c757d;color:#fff}
+        .btn-success{background:var(--accent);color:#fff}.btn-danger{background:var(--danger);color:#fff}.btn-pdf{background:#c0392b;color:#fff}
+        .hidden{display:none!important}
+        .auth-card{max-width:420px;margin:40px auto;padding:30px;border:1px solid #ddd;border-radius:8px;text-align:center;background:#fff;box-shadow:0 4px 6px rgba(0,0,0,.05)}
+        .success-box{background:#d4edda;color:#155724;border:1px solid #c3e6cb;padding:16px;border-radius:8px;text-align:center;margin-bottom:20px}
+        #pdf-content{width:210mm;min-height:297mm;margin:0 auto;padding:10mm 12mm;box-sizing:border-box;background:#fff;border:1px solid #bbb;font-size:16px;line-height:1.2}
+        .pdf-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:5px;border-bottom:4px double #2c3e50}
+        .pdf-header-text{text-align:center;flex:1}
+        .pdf-header-text h1{margin:0;font-size:18px;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;font-weight:900}
+        .pdf-header-text h2{margin:2px 0 0;font-size:14px;color:#3498db}
+        .form-title-bar{background:#2c3e50;color:#fff;text-align:center;padding:6px;font-size:14px;font-weight:bold;letter-spacing:1px;margin-bottom:15px;border-radius:2px}
+        .section-title{margin-top:8px;margin-bottom:4px;padding:4px 8px;background:#eaf2fb;border-left:4px solid #3498db;color:#2c3e50;grid-column:1/-1;font-size:14px;font-weight:bold}
+        #pdf-content input,#pdf-content select,#pdf-content textarea{border:none;border-bottom:1px solid #999;border-radius:0;padding:4px 2px;font-size:16px;background:transparent;width:100%;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+        #pdf-content input:disabled,#pdf-content select:disabled,#pdf-content textarea:disabled{background:transparent;color:#222;-webkit-text-fill-color:#222}
+        #pdf-content label{font-size:12px;color:#555;margin-bottom:2px}
+        .footer-grid{background:#f5f5f5;padding:8px 10px;border:1.5px solid #2c3e50;margin-top:10px}
+        .signature-input{border:none!important;border-bottom:2px solid #333!important;font-family:'Brush Script MT','Segoe Script',cursive;font-size:24px!important;background:transparent!important;padding:0!important;width:100%}
+        @media(max-width:900px){#pdf-content{width:100%;min-height:auto}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-box">
+        <h1>Driving Training School Registration</h1>
+        <p>Official Student Enrollment Portal</p>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" id="tab-stu" onclick="showPage('student-gate')">📝 Fill Form</button>
+        <button class="tab-btn" id="tab-view" onclick="showPage('view-gate')">👁 View My Form</button>
+        <button class="tab-btn" onclick="window.location.href='index.html'">🏠 Home</button>
+    </div>
+
+    <!-- SIGN IN -->
+    <div id="student-gate" class="page">
+        <div class="auth-card">
+            <h3>Student Sign-In</h3>
+            <p style="color:#666;font-size:.88rem;">Enter your details to proceed to registration.</p>
+            <div class="form-group" style="text-align:left;">
+                <label class="required">Full Name</label>
+                <input type="text" id="stuName" placeholder="Letters only">
+                <label class="required" style="margin-top:12px;">Phone Number</label>
+                <input type="text" id="stuPhone" placeholder="07XXXXXXXX (10 digits)">
+                <button class="btn btn-primary" onclick="studentSignIn()">Continue →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CODE PAGE -->
+    <div id="student-code-page" class="page hidden">
+        <div class="auth-card">
+            <div style="background:#fff3cd;color:#856404;padding:10px;border-radius:5px;margin-bottom:15px;">🔒 Admin Code Required</div>
+            <h3>Enter Registration Code</h3>
+            <p style="color:#666;font-size:.85rem;">Contact your admin for the registration code.</p>
+            <div class="form-group">
+                <input type="password" id="regToken" placeholder="Enter Code">
+                <button class="btn btn-success" onclick="verifyCode()">Unlock Form</button>
+                <button class="btn" style="background:#ddd;" onclick="showPage('student-gate')">← Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW GATE -->
+    <div id="view-gate" class="page hidden">
+        <div class="auth-card">
+            <h3>View Your Submitted Form</h3>
+            <p style="color:#666;font-size:.85rem;">Enter your Name and ID Number.</p>
+            <div class="form-group" style="text-align:left;">
+                <label class="required">Full Name (as submitted)</label>
+                <input type="text" id="viewName" placeholder="Name with Initials">
+                <label class="required" style="margin-top:12px;">NIC / ID Number</label>
+                <input type="text" id="viewId" placeholder="e.g. 901234567V">
+                <button class="btn btn-primary" onclick="viewForm()">View My Form</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTRATION FORM -->
+    <div id="reg-form-page" class="page hidden">
+        <div id="success-display" class="hidden success-box">
+            <h2 style="margin:0;">✔ Submitted Successfully</h2>
+            <p>Your registration form has been submitted.</p>
+        </div>
+        <div id="view-only-banner" class="hidden" style="background:#e8f4fd;color:#0056b3;border:1px solid #b8d9f7;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
+            <span>👁 Viewing your submitted form (read-only).</span>
+            <button class="btn btn-warning" style="margin:0;padding:7px 16px;" onclick="enableEdit()">✏️ Edit Form</button>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <h2 id="form-title">Student Enrollment Form</h2>
+            <div>
+                <button class="btn btn-pdf" onclick="downloadFormPDF()">⬇ Download Form</button>
+            </div>
+        </div>
+
+        <div id="pdf-content">
+            <div class="pdf-header">
+                <div style="width:72px;display:flex;align-items:center;justify-content:center;">
+                    <img src="https://tsa.cp.gov.lk/live_tracking/img/cptsa_logo.png" style="width:64px;height:64px;object-fit:contain;" onerror="this.style.display='none'">
+                </div>
+                <div class="pdf-header-text">
+                    <h1>Transport Services Authority</h1>
+                    <h2>Driving Training School</h2>
+                    <div style="margin:4px 0 0;font-size:11px;color:#888;">Sri Lanka | Student Registration Form | <span id="formDate"></span></div>
+                </div>
+                <div style="width:72px;"></div>
+            </div>
+            <div class="form-title-bar">APPLICATION FOR DRIVING TRAINING SCHOOL ENROLLMENT</div>
+
+            <form id="mainForm">
+                <div class="grid">
+                    <div class="section-title">Identification</div>
+                    <div class="form-group"><label class="required">ID Type</label><select id="idType"><option value="" disabled selected>Select Type</option><option value="NIC">NIC</option><option value="SL Passport">SL Passport</option><option value="Foreign Passport">Foreign Passport</option><option value="Diplomatic Passport">Diplomatic Passport</option></select></div>
+                    <div class="form-group"><label>Country of Identification</label><input type="text" id="countryId" value="Sri Lanka"></div>
+                    <div class="form-group"><label class="required">ID / Passport No</label><input type="text" id="idNo" placeholder="12 digits OR 9 digits + V"></div>
+
+                    <div class="section-title">Personal Information</div>
+                    <div class="form-group"><label>Last Name</label><input type="text" id="lName" placeholder="Last Name"></div>
+                    <div class="form-group"><label>Other Names</label><input type="text" id="otherNames" placeholder="Other Names"></div>
+                    <div class="form-group"><label class="required">Name with Initials</label><input type="text" id="nameInit" placeholder="e.g. Perera A. B."></div>
+                    <div class="form-group"><label class="required">Gender</label><select id="gender"><option value="" disabled selected>Select</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                    <div class="form-group"><label class="required">Date of Birth</label><input type="date" id="dob" onchange="calcAge()"></div>
+                    <div class="form-group"><label>Age</label><input type="number" id="age" readonly placeholder="Auto"></div>
+                    <div class="form-group"><label>Blood Group</label><select id="blood"><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div>
+
+                    <div class="section-title">Contact &amp; Address</div>
+                    <div class="form-group full-width"><label class="required">Permanent Address</label><textarea id="address" rows="2"></textarea></div>
+                    <div class="form-group"><label class="required">Phone Number</label><input type="tel" id="phone" placeholder="07xxxxxxxx"></div>
+                    <div class="form-group"><label>Divisional Secretariat</label><input type="text" id="divSecretariat"></div>
+
+                    <div class="section-title">Digital Signature</div>
+                    <div class="form-group full-width"><label>Please sign below (Optional)</label><input type="text" id="signText" class="signature-input"></div>
+
+                    <div class="section-title">Driver Details</div>
+                    <div class="form-group"><label>Driver Restrictions</label><select id="restrictions"><option value="None">None</option><option value="Corrective Lenses">Corrective Lenses</option><option value="Artificial Limb">Artificial Limb</option></select></div>
+                    <div class="form-group"><label>Organ Donor</label><select id="organDonor"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+
+                    <div class="section-title">Previous License (Optional)</div>
+                    <div class="form-group"><label>NTMI Certificate Date</label><input type="date" id="ntmiDate"></div>
+                    <div class="form-group"><label>NTMI Certificate No</label><input type="text" id="ntmiNo"></div>
+                    <div class="form-group"><label>Police Report Date</label><input type="date" id="polDate"></div>
+                    <div class="form-group"><label>Police Station</label><input type="text" id="polStation"></div>
+                    <div class="form-group"><label>Old License No</label><input type="text" id="oldLicNo"></div>
+                    <div class="form-group"><label>Old License Issue Date</label><input type="date" id="oldLicIssueDate"></div>
+                    <div class="form-group"><label>Old License Expiry Date</label><input type="date" id="oldLicExpDate"></div>
+
+                    <div class="full-width footer-grid">
+                        <p style="margin:0 0 8px;font-size:12px;color:#888;font-weight:600;">FOR OFFICE USE ONLY</p>
+                        <div class="grid">
+                            <div class="form-group"><label>Amount (LKR)</label><input type="number" id="amount"></div>
+                            <div class="form-group"><label>Cashier</label><input type="text" id="cashier"></div>
+                            <div class="form-group"><label>S.O.</label><input type="text" id="signingOfficer"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="action-buttons" style="text-align:right;margin-top:20px;border-top:1px solid #ddd;padding-top:16px;">
+            <button type="button" class="btn btn-danger" onclick="location.reload()">Cancel</button>
+            <button type="button" class="btn btn-save" onclick="saveDraft()">Save Draft</button>
+            <button type="button" class="btn btn-success" onclick="submitForm()">Submit Registration</button>
+        </div>
+    </div>
+</div>
+
+<script src="api_client.js"></script>
+<script>
+var currentPhone = '';
+
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (id === 'student-gate') document.getElementById('tab-stu').classList.add('active');
+    if (id === 'view-gate')    document.getElementById('tab-view').classList.add('active');
+}
+
+async function studentSignIn() {
+    var name  = document.getElementById('stuName').value.trim();
+    var phone = document.getElementById('stuPhone').value.trim();
+    if (!/^[A-Za-z\s\.]+$/.test(name)) { alert('Name must be letters only.'); return; }
+    if (!/^\d{10}$/.test(phone)) { alert('Phone must be 10 digits.'); return; }
+    currentPhone = phone;
+    showPage('student-code-page');
+}
+
+async function verifyCode() {
+    var token = document.getElementById('regToken').value.trim();
+    try {
+        await CPTSA.Settings.signinLog(
+            document.getElementById('stuName').value.trim(),
+            currentPhone,
+            token
+        );
+        // Code OK — load form
+        showPage('reg-form-page');
+        document.getElementById('phone').value    = currentPhone;
+        document.getElementById('nameInit').value = document.getElementById('stuName').value.trim();
+        document.getElementById('view-only-banner').style.display = 'none';
+
+        // Try to load existing form
+        try {
+            var form = await CPTSA.Settings.formGet({ phone: currentPhone, id_no: currentPhone, name: document.getElementById('stuName').value.trim() });
+            if (form) { loadFormData(form); lockForm(); showSuccessUI(); }
+        } catch {}
+    } catch(e) { alert(e.message || 'Invalid code.'); }
+}
+
+async function viewForm() {
+    var name = document.getElementById('viewName').value.trim();
+    var idNo = document.getElementById('viewId').value.trim();
+    if (!name || !idNo) { alert('Please enter both Name and ID Number.'); return; }
+    try {
+        var form = await CPTSA.Settings.formGet({ phone: '', id_no: idNo, name });
+        currentPhone = form.phone || '';
+        showPage('reg-form-page');
+        document.getElementById('form-title').textContent = 'Your Submitted Registration';
+        loadFormData(form);
+        lockForm();
+        document.getElementById('success-display').classList.add('hidden');
+        document.getElementById('view-only-banner').style.display = 'flex';
+        document.getElementById('action-buttons').innerHTML = `
+            <button class="btn btn-pdf" onclick="downloadFormPDF()">⬇ Download Form</button>
+            <button class="btn btn-primary" onclick="showPage('view-gate')">← Back</button>`;
+    } catch(e) { alert('No form found for those details.\n' + e.message); }
+}
+
+function enableEdit() {
+    unlockForm();
+    document.getElementById('view-only-banner').style.display = 'none';
+    document.getElementById('form-title').textContent = 'Edit Your Registration';
+    document.getElementById('action-buttons').innerHTML = `
+        <button type="button" class="btn btn-danger" onclick="viewForm()">Cancel Edit</button>
+        <button type="button" class="btn btn-save" onclick="saveDraft()">Save Draft</button>
+        <button type="button" class="btn btn-success" onclick="submitForm()">Update Registration</button>`;
+}
+
+async function saveDraft() {
+    var data = getFormData('Draft');
+    if (!data.id_no) { alert('Enter at least an ID Number to save draft.'); return; }
+    try {
+        await CPTSA.Settings.formSubmit(data);
+        alert('Draft saved!');
+    } catch(e) { alert('Error saving: ' + e.message); }
+}
+
+async function submitForm() {
+    var name  = document.getElementById('nameInit').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+    var idNo  = document.getElementById('idNo').value.trim();
+    var gender= document.getElementById('gender').value;
+    var addr  = document.getElementById('address').value.trim();
+    var idType= document.getElementById('idType').value;
+    if (!idType) { alert('Please select ID Type.'); return; }
+    if (!idNo)   { alert('Please enter ID Number.'); return; }
+    if (!name || !/^[A-Za-z\s\.]+$/.test(name)) { alert('Name with Initials must be letters only.'); return; }
+    if (!gender) { alert('Please select Gender.'); return; }
+    if (!addr)   { alert('Please enter Address.'); return; }
+    if (!/^\d{10}$/.test(phone)) { alert('Phone must be 10 digits.'); return; }
+
+    var data = getFormData('Submitted');
+    try {
+        await CPTSA.Settings.formSubmit(data);
+        lockForm();
+        showSuccessUI();
+        alert('Submitted successfully!');
+    } catch(e) { alert('Submission error: ' + e.message); }
+}
+
+function getFormData(status) {
+    var g = id => { var el = document.getElementById(id); return el ? el.value : ''; };
+    return {
+        student_phone: currentPhone,
+        id_type: g('idType'), id_no: g('idNo'),
+        last_name: g('lName'), other_names: g('otherNames'), name: g('nameInit'),
+        gender: g('gender'), dob: g('dob') || null, age: g('age') || null,
+        blood: g('blood'), address: g('address'), phone: g('phone'),
+        div_secretariat: g('divSecretariat'), restrictions: g('restrictions'),
+        organ_donor: g('organDonor') === 'Yes' ? 1 : 0,
+        ntmi_date: g('ntmiDate') || null, ntmi_no: g('ntmiNo'),
+        pol_date: g('polDate') || null, pol_station: g('polStation'),
+        old_lic_no: g('oldLicNo'),
+        old_lic_issue: g('oldLicIssueDate') || null,
+        old_lic_exp: g('oldLicExpDate') || null,
+        sign_text: g('signText'),
+        amount: g('amount') || null, cashier: g('cashier'),
+        signing_officer: g('signingOfficer'),
+        form_status: status,
+    };
+}
+
+function loadFormData(d) {
+    var s = (id, val) => { var el = document.getElementById(id); if (el && val != null) el.value = val; };
+    s('idType',d.id_type); s('countryId','Sri Lanka'); s('idNo',d.id_no);
+    s('lName',d.last_name); s('otherNames',d.other_names); s('nameInit',d.name_init || d.name);
+    s('gender',d.gender); s('dob',d.dob); s('age',d.age); s('blood',d.blood_group || d.blood);
+    s('address',d.address); s('phone',d.phone); s('divSecretariat',d.div_secretariat);
+    s('restrictions',d.restrictions); s('organDonor',d.organ_donor == 1 ? 'Yes' : 'No');
+    s('ntmiDate',d.ntmi_date); s('ntmiNo',d.ntmi_no);
+    s('polDate',d.pol_date); s('polStation',d.pol_station);
+    s('oldLicNo',d.old_lic_no); s('oldLicIssueDate',d.old_lic_issue); s('oldLicExpDate',d.old_lic_exp);
+    s('signText',d.sign_text); s('amount',d.amount); s('cashier',d.cashier); s('signingOfficer',d.signing_officer);
+}
+
+function lockForm() {
+    document.querySelectorAll('#pdf-content input,#pdf-content select,#pdf-content textarea').forEach(el => el.disabled = true);
+}
+function unlockForm() {
+    document.querySelectorAll('#pdf-content input,#pdf-content select,#pdf-content textarea').forEach(el => el.disabled = false);
+}
+
+function showSuccessUI() {
+    document.getElementById('success-display').classList.remove('hidden');
+    document.getElementById('view-only-banner').style.display = 'none';
+    document.getElementById('form-title').textContent = 'Submitted Registration';
+    document.getElementById('action-buttons').innerHTML = `
+        <button class="btn btn-pdf" onclick="downloadFormPDF()">⬇ Download Form</button>
+        <button class="btn btn-primary" onclick="location.reload()">New Registration</button>`;
+}
+
+function calcAge() {
+    var dob = new Date(document.getElementById('dob').value);
+    if (!isNaN(dob)) document.getElementById('age').value = Math.floor((Date.now() - dob) / (365.25*24*60*60*1000));
+}
+
+function downloadFormPDF() {
+    var el  = document.getElementById('pdf-content');
+    var idV = document.getElementById('idNo').value || 'Form';
+    var opt = {
+        margin:[0,0,0,0], filename:'Registration_'+idV+'.pdf',
+        image:{type:'jpeg',quality:.98},
+        html2canvas:{scale:2,useCORS:true,scrollY:0},
+        jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+        pagebreak:{mode:['avoid-all','css','legacy']}
+    };
+    html2pdf().set(opt).from(el).save();
+}
+
+window.onload = () => {
+    document.getElementById('formDate').textContent = new Date().toLocaleDateString();
+};
+</script>
+</body>
+</html>
