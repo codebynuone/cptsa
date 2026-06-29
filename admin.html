@@ -1,385 +1,934 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal — Transport Services Authority</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
     <style>
-        :root { --navy:#1a202c;--gold:#c9a227;--sage:#718096;--cream:#fffbf0;--border:#e2e8f0;--danger:#e53e3e;--success:#38a169; }
-        body{font-family:'Source Sans Pro',sans-serif;background:#f7fafc;color:var(--navy);margin:0;line-height:1.5}
-        h1,h2,h3,h4,h5{font-family:'Playfair Display',serif;margin:0 0 .5rem}
-        .card{background:#fff;border-radius:1rem;padding:1.5rem;box-shadow:0 4px 6px -1px rgba(0,0,0,.05);border:1px solid var(--border);margin-bottom:1rem}
-        .btn{display:inline-flex;align-items:center;justify-content:center;padding:.5rem 1rem;border-radius:.375rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-size:.95rem;text-decoration:none;gap:.4rem}
-        .btn-primary{background:var(--navy);color:#fff}.btn-primary:hover{background:#2d3748}
-        .btn-secondary{background:var(--gold);color:#fff}.btn-outline{background:transparent;border:1px solid var(--border);color:var(--navy)}
-        .btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{background:#c53030}
-        .btn-full{width:100%}.btn-sm{padding:.25rem .75rem;font-size:.85rem}
-        .form-control{width:100%;padding:.6rem;border:1px solid var(--border);border-radius:.375rem;font-size:1rem;box-sizing:border-box}
-        .form-group{margin-bottom:1rem}.form-group label{display:block;margin-bottom:.35rem;font-weight:600;font-size:.9rem;color:var(--navy)}
-        .text-sage{color:var(--sage)}.text-sm{font-size:.875rem}.text-xs{font-size:.75rem}.font-bold{font-weight:700}
-        .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
-        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
-        .table-wrap{overflow-x:auto}
-        .data-table{width:100%;border-collapse:collapse;min-width:600px}
-        .data-table th{text-align:left;padding:.75rem;background:var(--cream);border-bottom:2px solid var(--border);font-size:.85rem;color:var(--navy)}
-        .data-table td{padding:.75rem;border-bottom:1px solid var(--border);font-size:.9rem}
-        .badge{display:inline-block;padding:.25em .6em;font-size:.75rem;font-weight:700;border-radius:10rem;line-height:1}
-        .badge-success{background:#c6f6d5;color:#22543d}.badge-warning{background:#feebc8;color:#744210}
-        .badge-danger{background:#fed7d7;color:#742a2a}.badge-info{background:#bee3f8;color:#2a4365}
-        .badge-gray{background:#e2e8f0;color:#4a5568}.badge-purple{background:#e9d8fd;color:#44337a}
-        .portal-page{max-width:1200px;margin:0 auto;padding:2rem 1rem}
-        .login-card{max-width:420px;margin:4rem auto}
-        .portal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
-        .tabs{display:flex;gap:.5rem;overflow-x:auto;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:.5rem}
-        .tab-btn{background:none;border:none;padding:.5rem 1rem;color:var(--sage);font-weight:600;cursor:pointer;border-radius:.375rem;white-space:nowrap}
-        .tab-btn:hover{color:var(--navy);background:var(--cream)}.tab-btn.active{color:var(--navy);background:var(--cream);border-bottom:2px solid var(--gold)}
-        .tab-panel{display:none}.tab-panel.active{display:block}
-        .modal-backdrop{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:998;display:none}
-        .modal-box{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:2rem;border-radius:1rem;z-index:999;width:90%;max-width:620px;box-shadow:0 20px 25px -5px rgba(0,0,0,.1);display:none;max-height:90vh;overflow-y:auto}
-        .hours-bar{height:8px;background:#edf2f7;border-radius:9999px;overflow:hidden;width:100%}
-        .hours-fill{height:100%;border-radius:9999px;background:var(--success)}
-        .hours-fill.warning{background:var(--gold)}.hours-fill.danger{background:var(--danger)}
-        .switch{position:relative;display:inline-block;width:44px;height:24px}
-        .switch input{opacity:0;width:0;height:0}
-        .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#cbd5e0;transition:.4s;border-radius:24px}
-        .slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background:#fff;transition:.4s;border-radius:50%}
-        input:checked+.slider{background:var(--success)}
-        input:checked+.slider:before{transform:translateX(20px)}
-        .checkbox-group{display:flex;gap:1.5rem;flex-wrap:wrap}
-        .checkbox-item{display:flex;align-items:center;gap:.4rem;cursor:pointer;font-weight:600;font-size:.95rem}
-        .checkbox-item input[type=checkbox]{width:18px;height:18px;cursor:pointer;accent-color:var(--navy)}
-        .manual-section{border:2px solid var(--gold);border-radius:.75rem;padding:1.25rem;margin-top:1rem;background:#fffbf0}
-        .manual-vehicle-card{background:#fff;border:1px solid var(--border);border-radius:.5rem;padding:1rem;margin-bottom:1rem}
-        .manual-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 0;border-bottom:1px dashed var(--border)}
-        .manual-row:last-child{border-bottom:none}
-        .manual-input{width:80px;padding:.3rem;border:1px solid var(--border);border-radius:.25rem;text-align:right;font-weight:700}
-        .limit-btn{flex:1;padding:.4rem;font-size:.8rem;border:1px solid var(--border);background:#fff;color:var(--sage);cursor:pointer;border-radius:.25rem;font-weight:600;text-align:center}
-        .limit-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
-        .limit-btn.active-payout{background:var(--gold);color:#fff;border-color:var(--gold)}
-        .exam-status-select{padding:.25rem;border-radius:.25rem;border:1px solid var(--border);font-size:.85rem}
-        .exam-card{border:1px solid var(--border);border-radius:.5rem;padding:1rem;background:#fff;margin-bottom:1rem}
-        .hidden{display:none!important}
-        #toast{visibility:hidden;min-width:250px;background:#333;color:#fff;text-align:center;border-radius:4px;padding:16px;position:fixed;z-index:1000;left:50%;bottom:30px;transform:translateX(-50%);font-size:15px}
-        #toast.show{visibility:visible;animation:fadein .5s,fadeout .5s 2.5s}
-        @keyframes fadein{from{bottom:0;opacity:0}to{bottom:30px;opacity:1}}
-        @keyframes fadeout{from{bottom:30px;opacity:1}to{bottom:0;opacity:0}}
+        :root {
+            --navy: #1a202c;
+            --gold: #c9a227;
+            --sage: #718096;
+            --cream: #fffbf0;
+            --border: #e2e8f0;
+            --danger: #e53e3e;
+            --success: #38a169;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: #f7fafc;
+            color: var(--navy);
+            margin: 0;
+            line-height: 1.5
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: 'Playfair Display', serif;
+            margin: 0 0 .5rem
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .05);
+            border: 1px solid var(--border);
+            margin-bottom: 1rem
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: .5rem 1rem;
+            border-radius: .375rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all .2s;
+            font-size: .95rem;
+            text-decoration: none;
+            gap: .4rem
+        }
+
+        .btn-primary {
+            background: var(--navy);
+            color: #fff
+        }
+
+        .btn-primary:hover {
+            background: #2d3748
+        }
+
+        .btn-secondary {
+            background: var(--gold);
+            color: #fff
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--navy)
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff
+        }
+
+        .btn-danger:hover {
+            background: #c53030
+        }
+
+        .btn-full {
+            width: 100%
+        }
+
+        .btn-sm {
+            padding: .25rem .75rem;
+            font-size: .85rem
+        }
+
+        .form-control {
+            width: 100%;
+            padding: .6rem;
+            border: 1px solid var(--border);
+            border-radius: .375rem;
+            font-size: 1rem;
+            box-sizing: border-box
+        }
+
+        .form-group {
+            margin-bottom: 1rem
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: .35rem;
+            font-weight: 600;
+            font-size: .9rem;
+            color: var(--navy)
+        }
+
+        .text-sage {
+            color: var(--sage)
+        }
+
+        .text-sm {
+            font-size: .875rem
+        }
+
+        .text-xs {
+            font-size: .75rem
+        }
+
+        .font-bold {
+            font-weight: 700
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem
+        }
+
+        .table-wrap {
+            overflow-x: auto
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: .75rem;
+            background: var(--cream);
+            border-bottom: 2px solid var(--border);
+            font-size: .85rem;
+            color: var(--navy)
+        }
+
+        .data-table td {
+            padding: .75rem;
+            border-bottom: 1px solid var(--border);
+            font-size: .9rem
+        }
+
+        .badge {
+            display: inline-block;
+            padding: .25em .6em;
+            font-size: .75rem;
+            font-weight: 700;
+            border-radius: 10rem;
+            line-height: 1
+        }
+
+        .badge-success {
+            background: #c6f6d5;
+            color: #22543d
+        }
+
+        .badge-warning {
+            background: #feebc8;
+            color: #744210
+        }
+
+        .badge-danger {
+            background: #fed7d7;
+            color: #742a2a
+        }
+
+        .badge-info {
+            background: #bee3f8;
+            color: #2a4365
+        }
+
+        .badge-gray {
+            background: #e2e8f0;
+            color: #4a5568
+        }
+
+        .badge-purple {
+            background: #e9d8fd;
+            color: #44337a
+        }
+
+        .portal-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem
+        }
+
+        .login-card {
+            max-width: 420px;
+            margin: 4rem auto
+        }
+
+        .portal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .tabs {
+            display: flex;
+            gap: .5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: .5rem
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: .5rem 1rem;
+            color: var(--sage);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: .375rem;
+            white-space: nowrap
+        }
+
+        .tab-btn:hover {
+            color: var(--navy);
+            background: var(--cream)
+        }
+
+        .tab-btn.active {
+            color: var(--navy);
+            background: var(--cream);
+            border-bottom: 2px solid var(--gold)
+        }
+
+        .tab-panel {
+            display: none
+        }
+
+        .tab-panel.active {
+            display: block
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .4);
+            z-index: 998;
+            display: none
+        }
+
+        .modal-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 2rem;
+            border-radius: 1rem;
+            z-index: 999;
+            width: 90%;
+            max-width: 620px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, .1);
+            display: none;
+            max-height: 90vh;
+            overflow-y: auto
+        }
+
+        .hours-bar {
+            height: 8px;
+            background: #edf2f7;
+            border-radius: 9999px;
+            overflow: hidden;
+            width: 100%
+        }
+
+        .hours-fill {
+            height: 100%;
+            border-radius: 9999px;
+            background: var(--success)
+        }
+
+        .hours-fill.warning {
+            background: var(--gold)
+        }
+
+        .hours-fill.danger {
+            background: var(--danger)
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #cbd5e0;
+            transition: .4s;
+            border-radius: 24px
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            transition: .4s;
+            border-radius: 50%
+        }
+
+        input:checked+.slider {
+            background: var(--success)
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px)
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: .95rem
+        }
+
+        .checkbox-item input[type=checkbox] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--navy)
+        }
+
+        .manual-section {
+            border: 2px solid var(--gold);
+            border-radius: .75rem;
+            padding: 1.25rem;
+            margin-top: 1rem;
+            background: #fffbf0
+        }
+
+        .manual-vehicle-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: .5rem;
+            padding: 1rem;
+            margin-bottom: 1rem
+        }
+
+        .manual-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .5rem 0;
+            border-bottom: 1px dashed var(--border)
+        }
+
+        .manual-row:last-child {
+            border-bottom: none
+        }
+
+        .manual-input {
+            width: 80px;
+            padding: .3rem;
+            border: 1px solid var(--border);
+            border-radius: .25rem;
+            text-align: right;
+            font-weight: 700
+        }
+
+        .limit-btn {
+            flex: 1;
+            padding: .4rem;
+            font-size: .8rem;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--sage);
+            cursor: pointer;
+            border-radius: .25rem;
+            font-weight: 600;
+            text-align: center
+        }
+
+        .limit-btn.active {
+            background: var(--navy);
+            color: #fff;
+            border-color: var(--navy)
+        }
+
+        .limit-btn.active-payout {
+            background: var(--gold);
+            color: #fff;
+            border-color: var(--gold)
+        }
+
+        .exam-status-select {
+            padding: .25rem;
+            border-radius: .25rem;
+            border: 1px solid var(--border);
+            font-size: .85rem
+        }
+
+        .exam-card {
+            border: 1px solid var(--border);
+            border-radius: .5rem;
+            padding: 1rem;
+            background: #fff;
+            margin-bottom: 1rem
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 15px
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fadein .5s, fadeout .5s 2.5s
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0
+            }
+        }
     </style>
 </head>
+
 <body>
 
-<!-- LOGIN -->
-<div id="loginScreen">
-    <div class="portal-page">
-        <div class="card login-card">
-            <div style="text-align:center;margin-bottom:2rem;">
-                <div style="width:64px;height:64px;border-radius:50%;background:var(--navy);margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.5rem;font-weight:bold;">SA</div>
-                <h2 style="font-size:1.6rem;font-weight:700;">Admin Portal</h2>
-                <p class="text-sage text-sm" style="margin-top:.25rem;">Admin Access Only</p>
+    <!-- LOGIN -->
+    <div id="loginScreen">
+        <div class="portal-page">
+            <div class="card login-card">
+                <div style="text-align:center;margin-bottom:2rem;">
+                    <div
+                        style="width:64px;height:64px;border-radius:50%;background:var(--navy);margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.5rem;font-weight:bold;">
+                        SA</div>
+                    <h2 style="font-size:1.6rem;font-weight:700;">Admin Portal</h2>
+                    <p class="text-sage text-sm" style="margin-top:.25rem;">Admin Access Only</p>
+                </div>
+                <div class="form-group"><label>Username</label><input type="text" id="loginUser" class="form-control"
+                        placeholder="admin"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="loginPass"
+                        class="form-control" placeholder="Password"></div>
+                <p id="loginError" style="color:var(--danger);font-size:.875rem;margin-bottom:.75rem;display:none;"></p>
+                <button class="btn btn-primary btn-full" onclick="handleLogin()" style="margin-bottom:.75rem;">Sign
+                    In</button>
+                <a href="index.html" class="btn btn-primary btn-full"
+                    style="display: flex; align-items: center; justify-content: center; text-decoration: none; padding: 0.5rem 1rem; box-sizing: border-box;">Back
+                    to Home</a>
             </div>
-            <div class="form-group"><label>Username</label><input type="text" id="loginUser" class="form-control" placeholder="admin"></div>
-            <div class="form-group"><label>Password</label><input type="password" id="loginPass" class="form-control" placeholder="Password"></div>
-            <p id="loginError" style="color:var(--danger);font-size:.875rem;margin-bottom:.75rem;display:none;"></p>
-            <button class="btn btn-primary btn-full" onclick="handleLogin()" style="margin-bottom:.75rem;">Sign In</button>
-            <a href="index.html" class="btn btn-primary btn-full" style="display: flex; align-items: center; justify-content: center; text-decoration: none; padding: 0.5rem 1rem; box-sizing: border-box;">Back to Home</a>
         </div>
     </div>
-</div>
 
-<!-- DASHBOARD -->
-<div id="portalDashboard" style="display:none;">
-    <div class="portal-page">
-        <div class="portal-header">
-            <div style="display:flex;align-items:center;gap:1rem;">
-                <div style="width:56px;height:56px;border-radius:50%;background:#e2e8f0;flex-shrink:0;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🛡️</div>
-                <div><div style="font-size:1.1rem;font-weight:700;">Administrator</div><div style="font-size:.8rem;opacity:.75;">System Management</div></div>
-            </div>
-            <button class="btn btn-danger btn-sm" onclick="logout()">Sign Out</button>
-        </div>
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('dashboard',this)">Dashboard</button>
-            <button class="tab-btn" onclick="switchTab('students',this)">Students</button>
-            <button class="tab-btn" onclick="switchTab('timetable',this)">Timetable</button>
-            <button class="tab-btn" onclick="switchTab('exams',this)">Exams &amp; Results</button>
-            <button class="tab-btn" onclick="switchTab('messages',this)">Send Message</button>
-            <button class="tab-btn" onclick="switchTab('vehicles',this)">Vehicle Categories</button>
-            <button class="tab-btn" onclick="window.location.href='ann.html'">Announcements</button>
-            <button class="tab-btn" onclick="window.location.href='doc.html'">Documents</button>
-            <button class="tab-btn" onclick="window.location.href='admin_panel.html'">Registrations</button>
-            <button class="tab-btn" onclick="window.location.href='fees.html'">Fees</button>
-            <button class="tab-btn" onclick="window.location.href='adminpanel.html'">Instructors</button>
-        </div>
-
-        <!-- DASHBOARD TAB -->
-        <div class="tab-panel active" id="panelDashboard">
-            <div class="grid-2">
-                <div class="card" style="text-align:center;"><div id="statTotal" style="font-size:2.5rem;font-weight:700;color:var(--gold);">—</div><div class="text-sage text-sm">Total Students</div></div>
-                <div class="card" style="text-align:center;"><div id="statActive" style="font-size:2.5rem;font-weight:700;color:var(--success);">—</div><div class="text-sage text-sm">Active Students</div></div>
-                <div class="card" style="text-align:center;"><div id="statBookings" style="font-size:2.5rem;font-weight:700;color:var(--navy);">—</div><div class="text-sage text-sm">Total Bookings</div></div>
-                <div class="card" style="text-align:center;"><div id="statFeedback" style="font-size:2.5rem;font-weight:700;color:var(--gold);">—</div><div class="text-sage text-sm">Reviews</div></div>
-            </div>
-            <div class="card">
-                <h4 class="font-bold" style="margin-bottom:1rem;">📊 Student Hours Summary</h4>
-                <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem;">
-                    <input type="text" id="hoursSearch" class="form-control" placeholder="Search name or NIC…" oninput="renderHoursTable()" style="max-width:260px;">
-                    <select id="hoursVehicleFilter" class="form-control" style="max-width:220px;" onchange="renderHoursTable()"><option value="">All Vehicles</option></select>
-                </div>
-                <div id="allHoursTable"></div>
-            </div>
-        </div>
-
-        <!-- STUDENTS TAB -->
-        <div class="tab-panel" id="panelStudents">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;">
-                <h4 class="font-bold text-xl">Student Records</h4>
-                <button class="btn btn-primary" onclick="openAddStudent()">+ Add Student</button>
-            </div>
-            <input type="text" id="studentSearch" class="form-control" placeholder="Search by name, NIC, or phone…" oninput="renderStudentsTable()" style="max-width:360px;margin-bottom:1rem;">
-            <div class="table-wrap">
-                <table class="data-table">
-                    <thead><tr><th>Status</th><th>Photo</th><th>Name</th><th>NIC</th><th>Phone</th><th>Vehicles</th><th>Hours</th><th>Actions</th></tr></thead>
-                    <tbody id="studentsTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- TIMETABLE TAB -->
-        <div class="tab-panel" id="panelTimetable">
-            <div class="card">
-                <h4 class="font-bold" style="margin-bottom:1rem;">Create Time Slot</h4>
-                <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
-                    <div class="form-group" style="flex:1;min-width:150px;margin-bottom:0;"><label>Date</label><input type="date" id="newSlotDate" class="form-control"></div>
-                    <div class="form-group" style="flex:1;min-width:130px;margin-bottom:0;"><label>Start Time</label><input type="time" id="newSlotStart" class="form-control"></div>
-                    <div class="form-group" style="flex:1;min-width:130px;margin-bottom:0;"><label>End Time</label><input type="time" id="newSlotEnd" class="form-control"></div>
-                    <div class="form-group" style="flex:1;min-width:160px;margin-bottom:0;"><label>Vehicle</label><select id="newSlotVehicle" class="form-control"></select></div>
-                    <div class="form-group" style="width:100px;min-width:100px;margin-bottom:0;"><label>Capacity</label><input type="number" id="newSlotCapacity" class="form-control" value="4" min="1" max="20"></div>
-                    <button class="btn btn-primary" onclick="addTimeSlot()">Add Slot</button>
-                </div>
-                <div id="adminSlotsList" style="margin-top:1.5rem;"></div>
-            </div>
-            <div class="card">
-                <h4 class="font-bold" style="margin-bottom:1rem;">📋 Booking Breakdown</h4>
-                <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem;">
-                    <select id="bdVehicle" class="form-control" style="max-width:220px;" onchange="renderBreakdown()"></select>
-                    <input type="date" id="bdDate" class="form-control" style="max-width:180px;" oninput="renderBreakdown()">
-                </div>
-                <div id="adminSlotBreakdown"></div>
-            </div>
-        </div>
-
-        <!-- EXAMS TAB -->
-        <div class="tab-panel" id="panelExams">
-            <div class="card">
-                <h4 class="font-bold" style="margin-bottom:1rem;">📝 Manage Results &amp; Exam Dates</h4>
-                <input type="text" id="examSearch" class="form-control" placeholder="Search by name or NIC…" oninput="renderExamList()" style="max-width:360px;margin-bottom:1rem;">
-                <div id="examListContainer"></div>
-            </div>
-        </div>
-
-        <!-- MESSAGES TAB -->
-        <div class="tab-panel" id="panelMessages">
-            <div class="grid-2">
-                <div class="card">
-                    <h4 class="font-bold" style="margin-bottom:1rem;">📨 Compose Message</h4>
-                    <div class="form-group"><label>Title</label><input type="text" id="msgTitle" class="form-control" placeholder="e.g. Important Notice" oninput="updatePreview()"></div>
-                    <div class="form-group">
-                        <label>Recipients</label>
-                        <div style="display:flex;gap:.75rem;margin-bottom:.75rem;">
-                            <select id="msgVehicleFilter" class="form-control" onchange="populateRecipients()"><option value="">All Students</option></select>
-                            <button class="btn btn-outline btn-sm" onclick="selectAllRecipients()">All</button>
-                            <button class="btn btn-outline btn-sm" onclick="clearRecipients()">Clear</button>
-                        </div>
-                        <div id="recipientPool" style="max-height:200px;overflow-y:auto;border:1px solid var(--border);padding:.5rem;border-radius:.375rem;"></div>
+    <!-- DASHBOARD -->
+    <div id="portalDashboard" style="display:none;">
+        <div class="portal-page">
+            <div class="portal-header">
+                <div style="display:flex;align-items:center;gap:1rem;">
+                    <div
+                        style="width:56px;height:56px;border-radius:50%;background:#e2e8f0;flex-shrink:0;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.6rem;">
+                        🛡️</div>
+                    <div>
+                        <div style="font-size:1.1rem;font-weight:700;">Administrator</div>
+                        <div style="font-size:.8rem;opacity:.75;">System Management</div>
                     </div>
-                    <div class="form-group"><label>Message</label><textarea id="msgBody" class="form-control" rows="5" placeholder="Type your message…" oninput="updatePreview()"></textarea></div>
-                    <button class="btn btn-primary btn-full" onclick="sendMessage()">Send Message</button>
+                </div>
+                <button class="btn btn-danger btn-sm" onclick="logout()">Sign Out</button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('dashboard',this)">Dashboard</button>
+                <button class="tab-btn" onclick="switchTab('students',this)">Students</button>
+                <button class="tab-btn" onclick="switchTab('timetable',this)">Timetable</button>
+                <button class="tab-btn" onclick="switchTab('exams',this)">Exams &amp; Results</button>
+                <button class="tab-btn" onclick="switchTab('messages',this)">Send Message</button>
+                <button class="tab-btn" onclick="switchTab('vehicles',this)">Vehicle Categories</button>
+                <button class="tab-btn" onclick="window.location.href='ann.html'">Announcements</button>
+                <button class="tab-btn" onclick="window.location.href='doc.html'">Documents</button>
+                <button class="tab-btn" onclick="window.location.href='admin_panel.html'">Registrations</button>
+                <button class="tab-btn" onclick="window.location.href='fees.html'">Fees</button>
+                <button class="tab-btn" onclick="window.location.href='adminpanel.html'">Instructors</button>
+            </div>
+
+            <!-- DASHBOARD TAB -->
+            <div class="tab-panel active" id="panelDashboard">
+                <div class="grid-2">
+                    <div class="card" style="text-align:center;">
+                        <div id="statTotal" style="font-size:2.5rem;font-weight:700;color:var(--gold);">—</div>
+                        <div class="text-sage text-sm">Total Students</div>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <div id="statActive" style="font-size:2.5rem;font-weight:700;color:var(--success);">—</div>
+                        <div class="text-sage text-sm">Active Students</div>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <div id="statBookings" style="font-size:2.5rem;font-weight:700;color:var(--navy);">—</div>
+                        <div class="text-sage text-sm">Total Bookings</div>
+                    </div>
+                    <div class="card" style="text-align:center;">
+                        <div id="statFeedback" style="font-size:2.5rem;font-weight:700;color:var(--gold);">—</div>
+                        <div class="text-sage text-sm">Reviews</div>
+                    </div>
                 </div>
                 <div class="card">
-                    <h4 class="font-bold" style="margin-bottom:.75rem;">Preview</h4>
-                    <div style="background:#f7fafc;border:1px solid var(--border);padding:1rem;border-radius:.5rem;">
-                        <div style="border-bottom:1px solid var(--border);padding-bottom:.5rem;margin-bottom:.5rem;font-weight:700;color:var(--gold);">
-                            <span id="previewTitle">Message Title</span>
-                            <div style="font-size:.75rem;color:var(--sage);font-weight:400;margin-top:4px;">From: Administrator</div>
-                        </div>
-                        <div id="previewBody" style="white-space:pre-wrap;color:var(--navy);">Content here…</div>
+                    <h4 class="font-bold" style="margin-bottom:1rem;">📊 Student Hours Summary</h4>
+                    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem;">
+                        <input type="text" id="hoursSearch" class="form-control" placeholder="Search name or NIC…"
+                            oninput="renderHoursTable()" style="max-width:260px;">
+                        <select id="hoursVehicleFilter" class="form-control" style="max-width:220px;"
+                            onchange="renderHoursTable()">
+                            <option value="">All Vehicles</option>
+                        </select>
                     </div>
-                    <div id="msgSuccess" style="display:none;margin-top:1rem;padding:1rem;background:#c6f6d5;color:#22543d;border-radius:.5rem;text-align:center;">✅ Sent!</div>
+                    <div id="allHoursTable"></div>
                 </div>
             </div>
-        </div>
 
-        <!-- VEHICLES TAB -->
-        <div class="tab-panel" id="panelVehicles">
-            <div class="card">
-                <h4 class="font-bold" style="margin-bottom:.5rem;">Manage Vehicle Categories</h4>
-                <p class="text-sage text-sm" style="margin-bottom:1.5rem;">Add new categories here — they appear everywhere automatically.</p>
-                <div style="display:flex;gap:1rem;align-items:flex-end;margin-bottom:1.5rem;flex-wrap:wrap;">
-                    <div class="form-group" style="flex:1;min-width:180px;margin-bottom:0;">
-                        <label>Vehicle Code</label><input type="text" id="newVehCode" class="form-control" placeholder="e.g. truck">
-                        <div class="text-xs text-sage" style="margin-top:3px;">Lowercase, no spaces</div>
-                    </div>
-                    <div class="form-group" style="flex:2;min-width:220px;margin-bottom:0;"><label>Display Label</label><input type="text" id="newVehLabel" class="form-control" placeholder="e.g. 🚚 Heavy Truck (C)"></div>
-                    <button class="btn btn-primary" onclick="addVehicle()">+ Add</button>
+            <!-- STUDENTS TAB -->
+            <div class="tab-panel" id="panelStudents">
+                <div
+                    style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;">
+                    <h4 class="font-bold text-xl">Student Records</h4>
+                    <button class="btn btn-primary" onclick="openAddStudent()">+ Add Student</button>
                 </div>
+                <input type="text" id="studentSearch" class="form-control" placeholder="Search by name, NIC, or phone…"
+                    oninput="renderStudentsTable()" style="max-width:360px;margin-bottom:1rem;">
                 <div class="table-wrap">
-                    <table class="data-table"><thead><tr><th>Code</th><th>Label</th><th>Actions</th></tr></thead><tbody id="vehicleTableBody"></tbody></table>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>NIC</th>
+                                <th>Phone</th>
+                                <th>Vehicles</th>
+                                <th>Hours</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TIMETABLE TAB -->
+            <div class="tab-panel" id="panelTimetable">
+                <div class="card">
+                    <h4 class="font-bold" style="margin-bottom:1rem;">Create Time Slot</h4>
+                    <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
+                        <div class="form-group" style="flex:1;min-width:150px;margin-bottom:0;">
+                            <label>Date</label><input type="date" id="newSlotDate" class="form-control"></div>
+                        <div class="form-group" style="flex:1;min-width:130px;margin-bottom:0;"><label>Start
+                                Time</label><input type="time" id="newSlotStart" class="form-control"></div>
+                        <div class="form-group" style="flex:1;min-width:130px;margin-bottom:0;"><label>End
+                                Time</label><input type="time" id="newSlotEnd" class="form-control"></div>
+                        <div class="form-group" style="flex:1;min-width:160px;margin-bottom:0;">
+                            <label>Vehicle</label><select id="newSlotVehicle" class="form-control"></select></div>
+                        <div class="form-group" style="width:100px;min-width:100px;margin-bottom:0;">
+                            <label>Capacity</label><input type="number" id="newSlotCapacity" class="form-control"
+                                value="4" min="1" max="20"></div>
+                        <button class="btn btn-primary" onclick="addTimeSlot()">Add Slot</button>
+                    </div>
+                    <div id="adminSlotsList" style="margin-top:1.5rem;"></div>
+                </div>
+                <div class="card">
+                    <h4 class="font-bold" style="margin-bottom:1rem;">📋 Booking Breakdown</h4>
+                    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem;">
+                        <select id="bdVehicle" class="form-control" style="max-width:220px;"
+                            onchange="renderBreakdown()"></select>
+                        <input type="date" id="bdDate" class="form-control" style="max-width:180px;"
+                            oninput="renderBreakdown()">
+                    </div>
+                    <div id="adminSlotBreakdown"></div>
+                </div>
+            </div>
+
+            <!-- EXAMS TAB -->
+            <div class="tab-panel" id="panelExams">
+                <div class="card">
+                    <h4 class="font-bold" style="margin-bottom:1rem;">📝 Manage Results &amp; Exam Dates</h4>
+                    <input type="text" id="examSearch" class="form-control" placeholder="Search by name or NIC…"
+                        oninput="renderExamList()" style="max-width:360px;margin-bottom:1rem;">
+                    <div id="examListContainer"></div>
+                </div>
+            </div>
+
+            <!-- MESSAGES TAB -->
+            <div class="tab-panel" id="panelMessages">
+                <div class="grid-2">
+                    <div class="card">
+                        <h4 class="font-bold" style="margin-bottom:1rem;">📨 Compose Message</h4>
+                        <div class="form-group"><label>Title</label><input type="text" id="msgTitle"
+                                class="form-control" placeholder="e.g. Important Notice" oninput="updatePreview()">
+                        </div>
+                        <div class="form-group">
+                            <label>Recipients</label>
+                            <div style="display:flex;gap:.75rem;margin-bottom:.75rem;">
+                                <select id="msgVehicleFilter" class="form-control" onchange="populateRecipients()">
+                                    <option value="">All Students</option>
+                                </select>
+                                <button class="btn btn-outline btn-sm" onclick="selectAllRecipients()">All</button>
+                                <button class="btn btn-outline btn-sm" onclick="clearRecipients()">Clear</button>
+                            </div>
+                            <div id="recipientPool"
+                                style="max-height:200px;overflow-y:auto;border:1px solid var(--border);padding:.5rem;border-radius:.375rem;">
+                            </div>
+                        </div>
+                        <div class="form-group"><label>Message</label><textarea id="msgBody" class="form-control"
+                                rows="5" placeholder="Type your message…" oninput="updatePreview()"></textarea></div>
+                        <button class="btn btn-primary btn-full" onclick="sendMessage()">Send Message</button>
+                    </div>
+                    <div class="card">
+                        <h4 class="font-bold" style="margin-bottom:.75rem;">Preview</h4>
+                        <div
+                            style="background:#f7fafc;border:1px solid var(--border);padding:1rem;border-radius:.5rem;">
+                            <div
+                                style="border-bottom:1px solid var(--border);padding-bottom:.5rem;margin-bottom:.5rem;font-weight:700;color:var(--gold);">
+                                <span id="previewTitle">Message Title</span>
+                                <div style="font-size:.75rem;color:var(--sage);font-weight:400;margin-top:4px;">From:
+                                    Administrator</div>
+                            </div>
+                            <div id="previewBody" style="white-space:pre-wrap;color:var(--navy);">Content here…</div>
+                        </div>
+                        <div id="msgSuccess"
+                            style="display:none;margin-top:1rem;padding:1rem;background:#c6f6d5;color:#22543d;border-radius:.5rem;text-align:center;">
+                            ✅ Sent!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VEHICLES TAB -->
+            <div class="tab-panel" id="panelVehicles">
+                <div class="card">
+                    <h4 class="font-bold" style="margin-bottom:.5rem;">Manage Vehicle Categories</h4>
+                    <p class="text-sage text-sm" style="margin-bottom:1.5rem;">Add new categories here — they appear
+                        everywhere automatically.</p>
+                    <div style="display:flex;gap:1rem;align-items:flex-end;margin-bottom:1.5rem;flex-wrap:wrap;">
+                        <div class="form-group" style="flex:1;min-width:180px;margin-bottom:0;">
+                            <label>Vehicle Code</label><input type="text" id="newVehCode" class="form-control"
+                                placeholder="e.g. truck">
+                            <div class="text-xs text-sage" style="margin-top:3px;">Lowercase, no spaces</div>
+                        </div>
+                        <div class="form-group" style="flex:2;min-width:220px;margin-bottom:0;"><label>Display
+                                Label</label><input type="text" id="newVehLabel" class="form-control"
+                                placeholder="e.g. 🚚 Heavy Truck (C)"></div>
+                        <button class="btn btn-primary" onclick="addVehicle()">+ Add</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Label</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vehicleTableBody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- STUDENT MODAL -->
-<div id="modalBg" class="modal-backdrop" onclick="closeModal()"></div>
-<div id="studentModal" class="modal-box">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
-        <h3 id="modalTitle" class="font-bold">Add Student</h3>
-        <button onclick="closeModal()" style="background:none;border:none;cursor:pointer;font-size:1.5rem;color:var(--sage);">✕</button>
+    <!-- STUDENT MODAL -->
+    <div id="modalBg" class="modal-backdrop" onclick="closeModal()"></div>
+    <div id="studentModal" class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+            <h3 id="modalTitle" class="font-bold">Add Student</h3>
+            <button onclick="closeModal()"
+                style="background:none;border:none;cursor:pointer;font-size:1.5rem;color:var(--sage);">✕</button>
+        </div>
+        <!-- Photo -->
+        <div style="text-align:center;margin-bottom:1rem;">
+            <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;background:#e2e8f0;border:3px solid var(--gold);margin:0 auto .75rem;display:flex;align-items:center;justify-content:center;font-size:2.5rem;"
+                id="modalPhotoPreview">👤</div>
+            <label style="cursor:pointer;">
+                <input type="file" id="modalPhotoInput" accept="image/*" style="display:none;"
+                    onchange="previewModalPhoto(event)">
+                <span class="btn btn-outline btn-sm">Upload Photo</span>
+            </label>
+        </div>
+        <div class="form-grid">
+            <div class="form-group"><label>Reg Date</label><input type="date" id="mRegDate" class="form-control"></div>
+            <div class="form-group"><label>NIC / ID *</label><input type="text" id="mNic" class="form-control"
+                    placeholder="NIC or Passport No."></div>
+            <div class="form-group"><label>Password (blank = s+phone)</label><input type="text" id="mPassword"
+                    class="form-control" placeholder="Leave blank for default"></div>
+            <div class="form-group"><label>Last Name *</label><input type="text" id="mLastName" class="form-control">
+            </div>
+            <div class="form-group"><label>Other Names</label><input type="text" id="mOtherNames" class="form-control">
+            </div>
+            <div class="form-group"><label>Name with Initials *</label><input type="text" id="mNameInit"
+                    class="form-control"></div>
+            <div class="form-group"><label>Gender</label><select id="mGender" class="form-control">
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select></div>
+            <div class="form-group"><label>Phone *</label><input type="tel" id="mPhone" class="form-control"
+                    placeholder="07X XXXXXXX"></div>
+            <div class="form-group"><label>Address</label><input type="text" id="mAddress" class="form-control"></div>
+            <div class="form-group"><label>Blood Group</label><select id="mBlood" class="form-control">
+                    <option value="">Unknown</option>
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B-</option>
+                    <option>AB+</option>
+                    <option>AB-</option>
+                    <option>O+</option>
+                    <option>O-</option>
+                </select></div>
+        </div>
+        <div class="form-group" style="margin-top:.5rem;">
+            <label style="font-weight:700;margin-bottom:.5rem;display:block;">License Categories *</label>
+            <div class="checkbox-group" id="modalVehicleCheckboxes"></div>
+        </div>
+        <!-- Manual hours (edit only) -->
+        <div id="manualHoursSection" class="manual-section hidden">
+            <h4 style="margin-bottom:.25rem;font-weight:700;">🕐 Manual Hours &amp; Limits</h4>
+            <p class="text-sage text-xs" style="margin-bottom:1rem;">Adjust hours, deductions, or switch the limit
+                between 17h (normal) and 10h (re-paid).</p>
+            <div id="manualHoursInputs"></div>
+        </div>
+        <input type="hidden" id="mEditId" value="">
+        <div style="display:flex;gap:.75rem;margin-top:1.25rem;">
+            <button class="btn btn-primary" onclick="saveStudent()">Save Student</button>
+            <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        </div>
     </div>
-    <!-- Photo -->
-    <div style="text-align:center;margin-bottom:1rem;">
-        <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;background:#e2e8f0;border:3px solid var(--gold);margin:0 auto .75rem;display:flex;align-items:center;justify-content:center;font-size:2.5rem;" id="modalPhotoPreview">👤</div>
-        <label style="cursor:pointer;">
-            <input type="file" id="modalPhotoInput" accept="image/*" style="display:none;" onchange="previewModalPhoto(event)">
-            <span class="btn btn-outline btn-sm">Upload Photo</span>
-        </label>
-    </div>
-    <div class="form-grid">
-        <div class="form-group"><label>Reg Date</label><input type="date" id="mRegDate" class="form-control"></div>
-        <div class="form-group"><label>NIC / ID *</label><input type="text" id="mNic" class="form-control" placeholder="NIC or Passport No."></div>
-        <div class="form-group"><label>Password (blank = s+phone)</label><input type="text" id="mPassword" class="form-control" placeholder="Leave blank for default"></div>
-        <div class="form-group"><label>Last Name *</label><input type="text" id="mLastName" class="form-control"></div>
-        <div class="form-group"><label>Other Names</label><input type="text" id="mOtherNames" class="form-control"></div>
-        <div class="form-group"><label>Name with Initials *</label><input type="text" id="mNameInit" class="form-control"></div>
-        <div class="form-group"><label>Gender</label><select id="mGender" class="form-control"><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></div>
-        <div class="form-group"><label>Phone *</label><input type="tel" id="mPhone" class="form-control" placeholder="07X XXXXXXX"></div>
-        <div class="form-group"><label>Address</label><input type="text" id="mAddress" class="form-control"></div>
-        <div class="form-group"><label>Blood Group</label><select id="mBlood" class="form-control"><option value="">Unknown</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
-    </div>
-    <div class="form-group" style="margin-top:.5rem;">
-        <label style="font-weight:700;margin-bottom:.5rem;display:block;">License Categories *</label>
-        <div class="checkbox-group" id="modalVehicleCheckboxes"></div>
-    </div>
-    <!-- Manual hours (edit only) -->
-    <div id="manualHoursSection" class="manual-section hidden">
-        <h4 style="margin-bottom:.25rem;font-weight:700;">🕐 Manual Hours &amp; Limits</h4>
-        <p class="text-sage text-xs" style="margin-bottom:1rem;">Adjust hours, deductions, or switch the limit between 17h (normal) and 10h (re-paid).</p>
-        <div id="manualHoursInputs"></div>
-    </div>
-    <input type="hidden" id="mEditId" value="">
-    <div style="display:flex;gap:.75rem;margin-top:1.25rem;">
-        <button class="btn btn-primary" onclick="saveStudent()">Save Student</button>
-        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-    </div>
-</div>
 
-<div id="toast"><span id="toastMsg"></span></div>
+    <div id="toast"><span id="toastMsg"></span></div>
 
-<script>
-    // CRITICAL FIX: Set the correct API path for your cptsa_backend folder
-    window.API_BASE = '/cptsa_backend/api';
-</script>
-<script src="api_client.js"></script>
-<script>
-var students    = [];
-var vehicleList = [];
-var vehicleMap  = {};
+    <script>
+        // CRITICAL FIX: Set the correct API path for your cptsa_backend folder
+        // window.API_BASE = '/cptsa_backend/api';
+        window.API_BASE = '/api';
+    </script>
+    <script src="api_client.js"></script>
+    <script>
+        var students = [];
+        var vehicleList = [];
+        var vehicleMap = {};
 
-// ... rest of your JavaScript code stays the same ...
-var vehicleList = [];  // [{id,label}]
-var vehicleMap  = {};
+        // ... rest of your JavaScript code stays the same ...
+        var vehicleList = [];  // [{id,label}]
+        var vehicleMap = {};
 
-function showToast(msg) {
-    var t = document.getElementById('toast');
-    document.getElementById('toastMsg').textContent = msg;
-    t.className = 'show';
-    setTimeout(() => { t.className = ''; }, 3000);
-}
-function vLabel(id) { return vehicleMap[id] || id; }
+        function showToast(msg) {
+            var t = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            t.className = 'show';
+            setTimeout(() => { t.className = ''; }, 3000);
+        }
+        function vLabel(id) { return vehicleMap[id] || id; }
 
-// ── AUTH ─────────────────────────────────────────────────
-async function handleLogin() {
-    var u = document.getElementById('loginUser').value.trim();
-    var p = document.getElementById('loginPass').value.trim();
-    var e = document.getElementById('loginError');
-    e.style.display = 'none';
-    try {
-        await CPTSA.Auth.adminLogin(u, p);
-        await showPortal();
-    } catch(err) { e.textContent = err.message; e.style.display = 'block'; }
-}
-document.addEventListener('keydown', ev => {
-    if (ev.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') handleLogin();
-});
-async function logout() {
-    await CPTSA.Auth.logout().catch(() => {});
-    document.getElementById('portalDashboard').style.display = 'none';
-    document.getElementById('loginScreen').style.display = '';
-}
+        // ── AUTH ─────────────────────────────────────────────────
+        async function handleLogin() {
+            var u = document.getElementById('loginUser').value.trim();
+            var p = document.getElementById('loginPass').value.trim();
+            var e = document.getElementById('loginError');
+            e.style.display = 'none';
+            try {
+                await CPTSA.Auth.adminLogin(u, p);
+                await showPortal();
+            } catch (err) { e.textContent = err.message; e.style.display = 'block'; }
+        }
+        document.addEventListener('keydown', ev => {
+            if (ev.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') handleLogin();
+        });
+        async function logout() {
+            await CPTSA.Auth.logout().catch(() => { });
+            document.getElementById('portalDashboard').style.display = 'none';
+            document.getElementById('loginScreen').style.display = '';
+        }
 
-async function showPortal() {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('portalDashboard').style.display = 'block';
-    vehicleList = await CPTSA.Vehicles.list();
-    vehicleList.forEach(v => { vehicleMap[v.id] = v.label; });
-    populateVehicleDropdowns();
-    await Promise.all([renderDashboard(), renderStudentsTable(), renderAdminTimetable(), renderVehicleTable(), populateRecipients()]);
-}
+        async function showPortal() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('portalDashboard').style.display = 'block';
+            vehicleList = await CPTSA.Vehicles.list();
+            vehicleList.forEach(v => { vehicleMap[v.id] = v.label; });
+            populateVehicleDropdowns();
+            await Promise.all([renderDashboard(), renderStudentsTable(), renderAdminTimetable(), renderVehicleTable(), populateRecipients()]);
+        }
 
-function switchTab(name, btn) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('panel' + name.charAt(0).toUpperCase() + name.slice(1)).classList.add('active');
-    if (btn) btn.classList.add('active');
-    if (name === 'timetable')  { renderAdminTimetable(); renderBreakdown(); }
-    if (name === 'vehicles')   renderVehicleTable();
-    if (name === 'exams')      renderExamList();
-    if (name === 'messages')   populateRecipients();
-    if (name === 'students')   renderStudentsTable();
-    if (name === 'dashboard')  renderDashboard();
-}
+        function switchTab(name, btn) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('panel' + name.charAt(0).toUpperCase() + name.slice(1)).classList.add('active');
+            if (btn) btn.classList.add('active');
+            if (name === 'timetable') { renderAdminTimetable(); renderBreakdown(); }
+            if (name === 'vehicles') renderVehicleTable();
+            if (name === 'exams') renderExamList();
+            if (name === 'messages') populateRecipients();
+            if (name === 'students') renderStudentsTable();
+            if (name === 'dashboard') renderDashboard();
+        }
 
-function populateVehicleDropdowns() {
-    var opts = vehicleList.map(v => `<option value="${v.id}">${v.label}</option>`).join('');
-    var allOpts = '<option value="">All Vehicles</option>' + opts;
-    ['hoursVehicleFilter','newSlotVehicle','bdVehicle','msgVehicleFilter'].forEach(id => {
-        var el = document.getElementById(id);
-        if (el) el.innerHTML = id === 'newSlotVehicle' ? opts : allOpts;
-    });
-    rebuildModalCheckboxes();
-}
+        function populateVehicleDropdowns() {
+            var opts = vehicleList.map(v => `<option value="${v.id}">${v.label}</option>`).join('');
+            var allOpts = '<option value="">All Vehicles</option>' + opts;
+            ['hoursVehicleFilter', 'newSlotVehicle', 'bdVehicle', 'msgVehicleFilter'].forEach(id => {
+                var el = document.getElementById(id);
+                if (el) el.innerHTML = id === 'newSlotVehicle' ? opts : allOpts;
+            });
+            rebuildModalCheckboxes();
+        }
 
-// ── DASHBOARD ────────────────────────────────────────────
-async function renderDashboard() {
-    try {
-        var stats = await CPTSA.Settings.stats();
-        document.getElementById('statTotal').textContent    = stats.total_students;
-        document.getElementById('statActive').textContent   = stats.active_students;
-        document.getElementById('statBookings').textContent = stats.total_bookings;
-        document.getElementById('statFeedback').textContent = stats.total_feedback;
-    } catch {}
-    renderHoursTable();
-}
+        // ── DASHBOARD ────────────────────────────────────────────
+        async function renderDashboard() {
+            try {
+                var stats = await CPTSA.Settings.stats();
+                document.getElementById('statTotal').textContent = stats.total_students;
+                document.getElementById('statActive').textContent = stats.active_students;
+                document.getElementById('statBookings').textContent = stats.total_bookings;
+                document.getElementById('statFeedback').textContent = stats.total_feedback;
+            } catch { }
+            renderHoursTable();
+        }
 
-async function renderHoursTable() {
-    var search  = document.getElementById('hoursSearch')?.value?.toLowerCase() || '';
-    var vFilter = document.getElementById('hoursVehicleFilter')?.value || '';
-    var cont    = document.getElementById('allHoursTable');
+        async function renderHoursTable() {
+            var search = document.getElementById('hoursSearch')?.value?.toLowerCase() || '';
+            var vFilter = document.getElementById('hoursVehicleFilter')?.value || '';
+            var cont = document.getElementById('allHoursTable');
 
-    try {
-        var sList = await CPTSA.Students.list(search);
-        var rows  = [];
-        sList.forEach(s => {
-            var hrs = s.hours || [];
-            (vFilter ? hrs.filter(h => h.vehicle_id === vFilter) : hrs).forEach(h => {
-                var label  = vLabel(h.vehicle_id);
-                var pct    = Math.min(100, (h.used / h.limit) * 100);
-                var cls    = pct < 60 ? '' : pct < 90 ? 'warning' : 'danger';
-                var status = h.used >= h.limit && !h.extra_paid
-                    ? `<button class="btn btn-primary btn-sm" onclick="payRestart(${s.id},'${h.vehicle_id}')">Pay &amp; Restart</button>`
-                    : `<span class="badge ${h.extra_paid ? 'badge-warning' : 'badge-success'}">${h.extra_paid ? '10h Paid' : 'Active'}</span>`;
-                rows.push(`<tr>
+            try {
+                var sList = await CPTSA.Students.list(search);
+                var rows = [];
+                sList.forEach(s => {
+                    var hrs = s.hours || [];
+                    (vFilter ? hrs.filter(h => h.vehicle_id === vFilter) : hrs).forEach(h => {
+                        var label = vLabel(h.vehicle_id);
+                        var pct = Math.min(100, (h.used / h.limit) * 100);
+                        var cls = pct < 60 ? '' : pct < 90 ? 'warning' : 'danger';
+                        var status = h.used >= h.limit && !h.extra_paid
+                            ? `<button class="btn btn-primary btn-sm" onclick="payRestart(${s.id},'${h.vehicle_id}')">Pay &amp; Restart</button>`
+                            : `<span class="badge ${h.extra_paid ? 'badge-warning' : 'badge-success'}">${h.extra_paid ? '10h Paid' : 'Active'}</span>`;
+                        rows.push(`<tr>
                     <td style="font-weight:600;">${s.name_init || s.last_name || '—'}</td>
                     <td>${s.nic}</td>
                     <td><span class="badge badge-info">${label}</span></td>
@@ -391,39 +940,39 @@ async function renderHoursTable() {
                     <td style="font-weight:600;">${h.remaining}h</td>
                     <td>${status}</td>
                 </tr>`);
-            });
-        });
-        cont.innerHTML = rows.length
-            ? `<div class="table-wrap"><table class="data-table"><thead><tr><th>Student</th><th>NIC</th><th>Vehicle</th><th>Hours Used</th><th>Remaining</th><th>Status</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`
-            : '<p class="text-sage">No results.</p>';
-    } catch(e) { cont.innerHTML = `<p style="color:var(--danger)">Error: ${e.message}</p>`; }
-}
+                    });
+                });
+                cont.innerHTML = rows.length
+                    ? `<div class="table-wrap"><table class="data-table"><thead><tr><th>Student</th><th>NIC</th><th>Vehicle</th><th>Hours Used</th><th>Remaining</th><th>Status</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`
+                    : '<p class="text-sage">No results.</p>';
+            } catch (e) { cont.innerHTML = `<p style="color:var(--danger)">Error: ${e.message}</p>`; }
+        }
 
-async function payRestart(id, vehicle) {
-    if (!confirm('Confirm payment? Limit resets to 10h for this vehicle.')) return;
-    try {
-        await CPTSA.Students.payRestart(id, vehicle);
-        showToast('✅ Restarted with 10h.');
-        renderHoursTable();
-        renderStudentsTable();
-    } catch(e) { showToast('Error: ' + e.message); }
-}
+        async function payRestart(id, vehicle) {
+            if (!confirm('Confirm payment? Limit resets to 10h for this vehicle.')) return;
+            try {
+                await CPTSA.Students.payRestart(id, vehicle);
+                showToast('✅ Restarted with 10h.');
+                renderHoursTable();
+                renderStudentsTable();
+            } catch (e) { showToast('Error: ' + e.message); }
+        }
 
-// ── STUDENTS TABLE ────────────────────────────────────────
-async function renderStudentsTable() {
-    var search = document.getElementById('studentSearch')?.value || '';
-    var tbody  = document.getElementById('studentsTableBody');
-    try {
-        students = await CPTSA.Students.list(search);
-        tbody.innerHTML = students.map(s => {
-            var isActive = s.status === 'active';
-            var photos = s.photo_url ? `<img src="${s.photo_url}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);">` : `<div style="width:36px;height:36px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">👤</div>`;
-            var vBadges = (s.vehicles || []).map(v => `<span class="badge badge-info" style="margin-right:2px;">${vLabel(v)}</span>`).join('');
-            var hBadges = (s.hours || []).map(h => {
-                var cls = h.used >= h.limit ? 'badge-danger' : h.used > h.limit*.7 ? 'badge-warning' : 'badge-success';
-                return `<span class="badge ${cls}">${vLabel(h.vehicle_id)}: ${h.used}/${h.limit}h</span>`;
-            }).join(' ');
-            return `<tr>
+        // ── STUDENTS TABLE ────────────────────────────────────────
+        async function renderStudentsTable() {
+            var search = document.getElementById('studentSearch')?.value || '';
+            var tbody = document.getElementById('studentsTableBody');
+            try {
+                students = await CPTSA.Students.list(search);
+                tbody.innerHTML = students.map(s => {
+                    var isActive = s.status === 'active';
+                    var photos = s.photo_url ? `<img src="${s.photo_url}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);">` : `<div style="width:36px;height:36px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">👤</div>`;
+                    var vBadges = (s.vehicles || []).map(v => `<span class="badge badge-info" style="margin-right:2px;">${vLabel(v)}</span>`).join('');
+                    var hBadges = (s.hours || []).map(h => {
+                        var cls = h.used >= h.limit ? 'badge-danger' : h.used > h.limit * .7 ? 'badge-warning' : 'badge-success';
+                        return `<span class="badge ${cls}">${vLabel(h.vehicle_id)}: ${h.used}/${h.limit}h</span>`;
+                    }).join(' ');
+                    return `<tr>
                 <td><label class="switch"><input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleStatus(${s.id}, this)"><span class="slider"></span></label></td>
                 <td>${photos}</td>
                 <td style="font-weight:600;">${s.name_init || s.last_name || '—'}</td>
@@ -434,421 +983,422 @@ async function renderStudentsTable() {
                     <button class="btn btn-danger btn-sm" onclick="deleteStudent(${s.id})">Delete</button>
                 </td>
             </tr>`;
-        }).join('');
-    } catch(e) { tbody.innerHTML = `<tr><td colspan="8" style="color:var(--danger);">Error: ${e.message}</td></tr>`; }
-}
+                }).join('');
+            } catch (e) { tbody.innerHTML = `<tr><td colspan="8" style="color:var(--danger);">Error: ${e.message}</td></tr>`; }
+        }
 
-async function toggleStatus(id, cb) {
-    try {
-        var res = await CPTSA.Students.toggleStatus(id);
-        showToast(res.status === 'active' ? 'Student activated.' : 'Student deactivated.');
-        renderStudentsTable();
-    } catch(e) { showToast('Error: ' + e.message); cb.checked = !cb.checked; }
-}
+        async function toggleStatus(id, cb) {
+            try {
+                var res = await CPTSA.Students.toggleStatus(id);
+                showToast(res.status === 'active' ? 'Student activated.' : 'Student deactivated.');
+                renderStudentsTable();
+            } catch (e) { showToast('Error: ' + e.message); cb.checked = !cb.checked; }
+        }
 
-async function deleteStudent(id) {
-    var s = students.find(x => x.id === id);
-    if (!confirm(`Delete ${s?.name_init || 'this student'}? This cannot be undone.`)) return;
-    try {
-        await CPTSA.Students.delete(id);
-        showToast('Student deleted.');
-        renderStudentsTable();
-        renderDashboard();
-    } catch(e) { showToast('Error: ' + e.message); }
-}
+        async function deleteStudent(id) {
+            var s = students.find(x => x.id === id);
+            if (!confirm(`Delete ${s?.name_init || 'this student'}? This cannot be undone.`)) return;
+            try {
+                await CPTSA.Students.delete(id);
+                showToast('Student deleted.');
+                renderStudentsTable();
+                renderDashboard();
+            } catch (e) { showToast('Error: ' + e.message); }
+        }
 
-// ── MODAL ────────────────────────────────────────────────
-function rebuildModalCheckboxes() {
-    document.getElementById('modalVehicleCheckboxes').innerHTML = vehicleList.map(v =>
-        `<label class="checkbox-item"><input type="checkbox" class="vehicle-cb" value="${v.id}"> ${v.label}</label>`
-    ).join('');
-    document.querySelectorAll('.vehicle-cb').forEach(cb =>
-        cb.addEventListener('change', () => refreshManualSection())
-    );
-}
+        // ── MODAL ────────────────────────────────────────────────
+        function rebuildModalCheckboxes() {
+            document.getElementById('modalVehicleCheckboxes').innerHTML = vehicleList.map(v =>
+                `<label class="checkbox-item"><input type="checkbox" class="vehicle-cb" value="${v.id}"> ${v.label}</label>`
+            ).join('');
+            document.querySelectorAll('.vehicle-cb').forEach(cb =>
+                cb.addEventListener('change', () => refreshManualSection())
+            );
+        }
 
-function openAddStudent() {
-    document.getElementById('modalTitle').textContent = 'Add Student';
-    document.getElementById('mEditId').value = '';
-    ['mNic','mPassword','mLastName','mOtherNames','mNameInit','mPhone','mAddress'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('mGender').value = '';
-    document.getElementById('mBlood').value = '';
-    document.getElementById('mRegDate').value = new Date().toISOString().split('T')[0];
-    document.querySelectorAll('.vehicle-cb').forEach(cb => cb.checked = false);
-    document.getElementById('manualHoursSection').classList.add('hidden');
-    document.getElementById('modalPhotoPreview').innerHTML = '👤';
-    document.getElementById('modalPhotoInput').value = '';
-    document.getElementById('modalBg').style.display = 'block';
-    document.getElementById('studentModal').style.display = 'block';
-}
+        function openAddStudent() {
+            document.getElementById('modalTitle').textContent = 'Add Student';
+            document.getElementById('mEditId').value = '';
+            ['mNic', 'mPassword', 'mLastName', 'mOtherNames', 'mNameInit', 'mPhone', 'mAddress'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('mGender').value = '';
+            document.getElementById('mBlood').value = '';
+            document.getElementById('mRegDate').value = new Date().toISOString().split('T')[0];
+            document.querySelectorAll('.vehicle-cb').forEach(cb => cb.checked = false);
+            document.getElementById('manualHoursSection').classList.add('hidden');
+            document.getElementById('modalPhotoPreview').innerHTML = '👤';
+            document.getElementById('modalPhotoInput').value = '';
+            document.getElementById('modalBg').style.display = 'block';
+            document.getElementById('studentModal').style.display = 'block';
+        }
 
-function openEditStudent(id) {
-    var s = students.find(x => x.id === id);
-    if (!s) return;
-    document.getElementById('modalTitle').textContent = 'Edit Student';
-    document.getElementById('mEditId').value = id;
-    document.getElementById('mNic').value      = s.nic || '';
-    document.getElementById('mPassword').value = '';
-    document.getElementById('mLastName').value  = s.last_name || '';
-    document.getElementById('mOtherNames').value= s.other_names || '';
-    document.getElementById('mNameInit').value  = s.name_init || '';
-    document.getElementById('mGender').value    = s.gender || '';
-    document.getElementById('mPhone').value     = s.phone || '';
-    document.getElementById('mAddress').value   = s.address || '';
-    document.getElementById('mBlood').value     = s.blood_group || '';
-    document.getElementById('mRegDate').value   = s.reg_date || '';
+        function openEditStudent(id) {
+            var s = students.find(x => x.id === id);
+            if (!s) return;
+            document.getElementById('modalTitle').textContent = 'Edit Student';
+            document.getElementById('mEditId').value = id;
+            document.getElementById('mNic').value = s.nic || '';
+            document.getElementById('mPassword').value = '';
+            document.getElementById('mLastName').value = s.last_name || '';
+            document.getElementById('mOtherNames').value = s.other_names || '';
+            document.getElementById('mNameInit').value = s.name_init || '';
+            document.getElementById('mGender').value = s.gender || '';
+            document.getElementById('mPhone').value = s.phone || '';
+            document.getElementById('mAddress').value = s.address || '';
+            document.getElementById('mBlood').value = s.blood_group || '';
+            document.getElementById('mRegDate').value = s.reg_date || '';
 
-    document.querySelectorAll('.vehicle-cb').forEach(cb => {
-        cb.checked = (s.vehicles || []).includes(cb.value);
-    });
-    if (s.photo_url) {
-        document.getElementById('modalPhotoPreview').innerHTML = `<img src="${s.photo_url}" style="width:100%;height:100%;object-fit:cover;">`;
-    } else {
-        document.getElementById('modalPhotoPreview').innerHTML = '👤';
-    }
-    refreshManualSection(s);
-    document.getElementById('modalBg').style.display = 'block';
-    document.getElementById('studentModal').style.display = 'block';
-}
+            document.querySelectorAll('.vehicle-cb').forEach(cb => {
+                cb.checked = (s.vehicles || []).includes(cb.value);
+            });
+            if (s.photo_url) {
+                document.getElementById('modalPhotoPreview').innerHTML = `<img src="${s.photo_url}" style="width:100%;height:100%;object-fit:cover;">`;
+            } else {
+                document.getElementById('modalPhotoPreview').innerHTML = '👤';
+            }
+            refreshManualSection(s);
+            document.getElementById('modalBg').style.display = 'block';
+            document.getElementById('studentModal').style.display = 'block';
+        }
 
-function refreshManualSection(s) {
-    var sec  = document.getElementById('manualHoursSection');
-    var cont = document.getElementById('manualHoursInputs');
-    var isEdit = !!document.getElementById('mEditId').value;
-    if (!isEdit) { sec.classList.add('hidden'); return; }
+        function refreshManualSection(s) {
+            var sec = document.getElementById('manualHoursSection');
+            var cont = document.getElementById('manualHoursInputs');
+            var isEdit = !!document.getElementById('mEditId').value;
+            if (!isEdit) { sec.classList.add('hidden'); return; }
 
-    var selected = Array.from(document.querySelectorAll('.vehicle-cb:checked')).map(cb => cb.value);
-    if (!selected.length) { sec.classList.add('hidden'); return; }
-    sec.classList.remove('hidden');
+            var selected = Array.from(document.querySelectorAll('.vehicle-cb:checked')).map(cb => cb.value);
+            if (!selected.length) { sec.classList.add('hidden'); return; }
+            sec.classList.remove('hidden');
 
-    cont.innerHTML = selected.map(vid => {
-        var h = s ? (s.hours || []).find(h => h.vehicle_id === vid) : null;
-        var manual = h?.manual_hrs || 0;
-        var deduct = h?.deduction_hrs || 0;
-        var ep     = h?.extra_paid || false;
-        var limit  = ep ? 10 : 17;
-        return `<div class="manual-vehicle-card">
+            cont.innerHTML = selected.map(vid => {
+                var h = s ? (s.hours || []).find(h => h.vehicle_id === vid) : null;
+                var manual = h?.manual_hrs || 0;
+                var deduct = h?.deduction_hrs || 0;
+                var ep = h?.extra_paid || false;
+                var limit = ep ? 10 : 17;
+                return `<div class="manual-vehicle-card">
             <div style="font-weight:700;margin-bottom:.5rem;">${vLabel(vid)}</div>
             <div class="manual-row"><span style="font-size:.85rem;color:var(--sage);">From Bookings</span><span>${h?.booking_hrs || 0}h</span></div>
-            <div class="manual-row" style="align-items:center;"><span style="font-size:.85rem;color:var(--danger);">Deduction</span><input type="number" class="manual-input" id="deduct_${vid}" value="${deduct||''}" placeholder="0.0" step="0.5" min="0" oninput="previewTotal('${vid}')"></div>
-            <div class="manual-row" style="align-items:center;"><span style="font-size:.85rem;">Manual Add (+)</span><input type="number" class="manual-input" id="manual_${vid}" value="${manual||''}" placeholder="0.0" step="0.5" min="0" oninput="previewTotal('${vid}')"></div>
+            <div class="manual-row" style="align-items:center;"><span style="font-size:.85rem;color:var(--danger);">Deduction</span><input type="number" class="manual-input" id="deduct_${vid}" value="${deduct || ''}" placeholder="0.0" step="0.5" min="0" oninput="previewTotal('${vid}')"></div>
+            <div class="manual-row" style="align-items:center;"><span style="font-size:.85rem;">Manual Add (+)</span><input type="number" class="manual-input" id="manual_${vid}" value="${manual || ''}" placeholder="0.0" step="0.5" min="0" oninput="previewTotal('${vid}')"></div>
             <div style="margin-top:.5rem;font-size:.8rem;font-weight:600;color:var(--sage);">Limit:</div>
             <div style="display:flex;gap:.5rem;margin-top:.25rem;">
                 <div id="btn17_${vid}" class="limit-btn ${!ep ? 'active' : ''}" onclick="setLimit('${vid}',17)">17h Normal</div>
                 <div id="btn10_${vid}" class="limit-btn ${ep ? 'active active-payout' : ''}" onclick="setLimit('${vid}',10)">10h Paid</div>
             </div>
-            <div style="margin-top:.5rem;font-weight:700;" id="totalRow_${vid}">Total: ${((h?.booking_hrs||0)-(deduct||0)+(manual||0)).toFixed(1)}h / ${limit}h</div>
+            <div style="margin-top:.5rem;font-weight:700;" id="totalRow_${vid}">Total: ${((h?.booking_hrs || 0) - (deduct || 0) + (manual || 0)).toFixed(1)}h / ${limit}h</div>
         </div>`;
-    }).join('');
-}
-
-function setLimit(vid, n) {
-    var b17 = document.getElementById('btn17_' + vid);
-    var b10 = document.getElementById('btn10_' + vid);
-    if (n === 10) { b17.className = 'limit-btn'; b10.className = 'limit-btn active active-payout'; }
-    else          { b10.className = 'limit-btn'; b17.className = 'limit-btn active'; }
-    previewTotal(vid);
-}
-
-function previewTotal(vid) {
-    var s    = students.find(x => x.id === parseInt(document.getElementById('mEditId').value));
-    var h    = s ? (s.hours || []).find(h => h.vehicle_id === vid) : null;
-    var bk   = h?.booking_hrs || 0;
-    var ded  = parseFloat(document.getElementById('deduct_' + vid)?.value) || 0;
-    var man  = parseFloat(document.getElementById('manual_' + vid)?.value) || 0;
-    var ep   = document.getElementById('btn10_' + vid)?.classList.contains('active-payout');
-    var lim  = ep ? 10 : 17;
-    var tot  = Math.max(0, bk - ded + man).toFixed(1);
-    var row  = document.getElementById('totalRow_' + vid);
-    if (row) row.textContent = `Total: ${tot}h / ${lim}h`;
-}
-
-function previewModalPhoto(e) {
-    var file = e.target.files[0]; if (!file) return;
-    var reader = new FileReader();
-    reader.onload = ev => {
-        document.getElementById('modalPhotoPreview').innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
-    };
-    reader.readAsDataURL(file);
-}
-
-async function saveStudent() {
-    var nic   = document.getElementById('mNic').value.trim();
-    var phone = document.getElementById('mPhone').value.trim();
-    var lName = document.getElementById('mLastName').value.trim();
-    if (!nic || !lName || !phone) { showToast('NIC, Last Name and Phone are required.'); return; }
-
-    var selected = Array.from(document.querySelectorAll('.vehicle-cb:checked')).map(cb => cb.value);
-    if (!selected.length) { showToast('Please select at least one license category.'); return; }
-
-    var editId = document.getElementById('mEditId').value;
-
-    var data = {
-        nic, last_name: lName,
-        other_names: document.getElementById('mOtherNames').value.trim(),
-        name_init:   document.getElementById('mNameInit').value.trim() || lName,
-        gender:      document.getElementById('mGender').value,
-        phone,
-        address:     document.getElementById('mAddress').value.trim(),
-        blood:       document.getElementById('mBlood').value,
-        reg_date:    document.getElementById('mRegDate').value,
-        vehicles:    selected,
-    };
-    var pw = document.getElementById('mPassword').value.trim();
-    if (pw) data.password = pw;
-
-    // Collect manual hours
-    if (editId) {
-        data.manual_hours_map = {};
-        data.deduction_map    = {};
-        data.extra_paid_map   = {};
-        selected.forEach(vid => {
-            data.manual_hours_map[vid] = parseFloat(document.getElementById('manual_' + vid)?.value) || 0;
-            data.deduction_map[vid]    = parseFloat(document.getElementById('deduct_' + vid)?.value) || 0;
-            data.extra_paid_map[vid]   = document.getElementById('btn10_' + vid)?.classList.contains('active-payout') ? 1 : 0;
-        });
-    }
-
-    try {
-        if (editId) {
-            await CPTSA.Students.update(editId, data);
-            showToast('Student updated!');
-        } else {
-            await CPTSA.Students.create(data);
-            showToast('Student added!');
+            }).join('');
         }
-        closeModal();
-        await renderStudentsTable();
-        await renderDashboard();
-    } catch(e) { showToast('Error: ' + e.message); }
-}
 
-function closeModal() {
-    document.getElementById('modalBg').style.display = 'none';
-    document.getElementById('studentModal').style.display = 'none';
-}
+        function setLimit(vid, n) {
+            var b17 = document.getElementById('btn17_' + vid);
+            var b10 = document.getElementById('btn10_' + vid);
+            if (n === 10) { b17.className = 'limit-btn'; b10.className = 'limit-btn active active-payout'; }
+            else { b10.className = 'limit-btn'; b17.className = 'limit-btn active'; }
+            previewTotal(vid);
+        }
 
-// ── TIMETABLE (ADMIN) ─────────────────────────────────────
-async function addTimeSlot() {
-    var date  = document.getElementById('newSlotDate').value;
-    var start = document.getElementById('newSlotStart').value;
-    var end   = document.getElementById('newSlotEnd').value;
-    var veh   = document.getElementById('newSlotVehicle').value;
-    var cap   = parseInt(document.getElementById('newSlotCapacity').value) || 4;
-    if (!date || !start || !end || !veh) { showToast('All fields required.'); return; }
+        function previewTotal(vid) {
+            var s = students.find(x => x.id === parseInt(document.getElementById('mEditId').value));
+            var h = s ? (s.hours || []).find(h => h.vehicle_id === vid) : null;
+            var bk = h?.booking_hrs || 0;
+            var ded = parseFloat(document.getElementById('deduct_' + vid)?.value) || 0;
+            var man = parseFloat(document.getElementById('manual_' + vid)?.value) || 0;
+            var ep = document.getElementById('btn10_' + vid)?.classList.contains('active-payout');
+            var lim = ep ? 10 : 17;
+            var tot = Math.max(0, bk - ded + man).toFixed(1);
+            var row = document.getElementById('totalRow_' + vid);
+            if (row) row.textContent = `Total: ${tot}h / ${lim}h`;
+        }
 
-    // Build display string
-    var fmt = t => { var [h,m] = t.split(':'); h = parseInt(h); return (h > 12 ? h-12 : (h||12)) + ':' + m + ' ' + (h >= 12 ? 'PM' : 'AM'); };
-    var display = fmt(start) + ' – ' + fmt(end);
+        function previewModalPhoto(e) {
+            var file = e.target.files[0]; if (!file) return;
+            var reader = new FileReader();
+            reader.onload = ev => {
+                document.getElementById('modalPhotoPreview').innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+            };
+            reader.readAsDataURL(file);
+        }
 
-    try {
-        await CPTSA.Timetable.createSlot({ date, time_start: start, time_end: end, vehicle_id: veh, capacity: cap, display_time: display });
-        showToast('Slot added.');
-        renderAdminTimetable();
-        renderBreakdown();
-    } catch(e) { showToast('Error: ' + e.message); }
-}
+        async function saveStudent() {
+            var nic = document.getElementById('mNic').value.trim();
+            var phone = document.getElementById('mPhone').value.trim();
+            var lName = document.getElementById('mLastName').value.trim();
+            if (!nic || !lName || !phone) { showToast('NIC, Last Name and Phone are required.'); return; }
 
-async function renderAdminTimetable() {
-    try {
-        var slots = await CPTSA.Timetable.slots();
-        slots.sort((a,b) => b.slot_date.localeCompare(a.slot_date) || a.time_start.localeCompare(b.time_start));
-        var cont = document.getElementById('adminSlotsList');
-        cont.innerHTML = slots.length
-            ? `<div class="table-wrap"><table class="data-table"><thead><tr><th>Date</th><th>Time</th><th>Vehicle</th><th>Cap</th><th>Booked</th><th>Action</th></tr></thead><tbody>
-                ${slots.map(s => `<tr><td>${new Date(s.slot_date + 'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</td>
+            var selected = Array.from(document.querySelectorAll('.vehicle-cb:checked')).map(cb => cb.value);
+            if (!selected.length) { showToast('Please select at least one license category.'); return; }
+
+            var editId = document.getElementById('mEditId').value;
+
+            var data = {
+                nic, last_name: lName,
+                other_names: document.getElementById('mOtherNames').value.trim(),
+                name_init: document.getElementById('mNameInit').value.trim() || lName,
+                gender: document.getElementById('mGender').value,
+                phone,
+                address: document.getElementById('mAddress').value.trim(),
+                blood: document.getElementById('mBlood').value,
+                reg_date: document.getElementById('mRegDate').value,
+                vehicles: selected,
+            };
+            var pw = document.getElementById('mPassword').value.trim();
+            if (pw) data.password = pw;
+
+            // Collect manual hours
+            if (editId) {
+                data.manual_hours_map = {};
+                data.deduction_map = {};
+                data.extra_paid_map = {};
+                selected.forEach(vid => {
+                    data.manual_hours_map[vid] = parseFloat(document.getElementById('manual_' + vid)?.value) || 0;
+                    data.deduction_map[vid] = parseFloat(document.getElementById('deduct_' + vid)?.value) || 0;
+                    data.extra_paid_map[vid] = document.getElementById('btn10_' + vid)?.classList.contains('active-payout') ? 1 : 0;
+                });
+            }
+
+            try {
+                if (editId) {
+                    await CPTSA.Students.update(editId, data);
+                    showToast('Student updated!');
+                } else {
+                    await CPTSA.Students.create(data);
+                    showToast('Student added!');
+                }
+                closeModal();
+                await renderStudentsTable();
+                await renderDashboard();
+            } catch (e) { showToast('Error: ' + e.message); }
+        }
+
+        function closeModal() {
+            document.getElementById('modalBg').style.display = 'none';
+            document.getElementById('studentModal').style.display = 'none';
+        }
+
+        // ── TIMETABLE (ADMIN) ─────────────────────────────────────
+        async function addTimeSlot() {
+            var date = document.getElementById('newSlotDate').value;
+            var start = document.getElementById('newSlotStart').value;
+            var end = document.getElementById('newSlotEnd').value;
+            var veh = document.getElementById('newSlotVehicle').value;
+            var cap = parseInt(document.getElementById('newSlotCapacity').value) || 4;
+            if (!date || !start || !end || !veh) { showToast('All fields required.'); return; }
+
+            // Build display string
+            var fmt = t => { var [h, m] = t.split(':'); h = parseInt(h); return (h > 12 ? h - 12 : (h || 12)) + ':' + m + ' ' + (h >= 12 ? 'PM' : 'AM'); };
+            var display = fmt(start) + ' – ' + fmt(end);
+
+            try {
+                await CPTSA.Timetable.createSlot({ date, time_start: start, time_end: end, vehicle_id: veh, capacity: cap, display_time: display });
+                showToast('Slot added.');
+                renderAdminTimetable();
+                renderBreakdown();
+            } catch (e) { showToast('Error: ' + e.message); }
+        }
+
+        async function renderAdminTimetable() {
+            try {
+                var slots = await CPTSA.Timetable.slots();
+                slots.sort((a, b) => b.slot_date.localeCompare(a.slot_date) || a.time_start.localeCompare(b.time_start));
+                var cont = document.getElementById('adminSlotsList');
+                cont.innerHTML = slots.length
+                    ? `<div class="table-wrap"><table class="data-table"><thead><tr><th>Date</th><th>Time</th><th>Vehicle</th><th>Cap</th><th>Booked</th><th>Action</th></tr></thead><tbody>
+                ${slots.map(s => `<tr><td>${new Date(s.slot_date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</td>
                 <td>${s.display_time}</td><td><span class="badge badge-info">${vLabel(s.vehicle_id)}</span></td>
                 <td>${s.capacity}</td><td>${s.booked_count}</td>
                 <td><button class="btn btn-danger btn-sm" onclick="removeSlot('${s.id}')">Remove</button></td></tr>`).join('')}
                </tbody></table></div>`
-            : '<p class="text-sage">No slots created yet.</p>';
-    } catch(e) { document.getElementById('adminSlotsList').innerHTML = `<p style="color:var(--danger)">Error: ${e.message}</p>`; }
-}
+                    : '<p class="text-sage">No slots created yet.</p>';
+            } catch (e) { document.getElementById('adminSlotsList').innerHTML = `<p style="color:var(--danger)">Error: ${e.message}</p>`; }
+        }
 
-async function removeSlot(id) {
-    if (!confirm('Delete slot? Bookings will be removed.')) return;
-    try {
-        await CPTSA.Timetable.deleteSlot(id);
-        showToast('Slot removed.');
-        renderAdminTimetable();
-        renderBreakdown();
-    } catch(e) { showToast('Error: ' + e.message); }
-}
+        async function removeSlot(id) {
+            if (!confirm('Delete slot? Bookings will be removed.')) return;
+            try {
+                await CPTSA.Timetable.deleteSlot(id);
+                showToast('Slot removed.');
+                renderAdminTimetable();
+                renderBreakdown();
+            } catch (e) { showToast('Error: ' + e.message); }
+        }
 
-async function renderBreakdown() {
-    var veh  = document.getElementById('bdVehicle')?.value || '';
-    var date = document.getElementById('bdDate')?.value || '';
-    var cont = document.getElementById('adminSlotBreakdown');
-    try {
-        var slots = await CPTSA.Timetable.breakdown(veh, date);
-        if (!slots.length) { cont.innerHTML = '<p class="text-sage">No slots found.</p>'; return; }
+        async function renderBreakdown() {
+            var veh = document.getElementById('bdVehicle')?.value || '';
+            var date = document.getElementById('bdDate')?.value || '';
+            var cont = document.getElementById('adminSlotBreakdown');
+            try {
+                var slots = await CPTSA.Timetable.breakdown(veh, date);
+                if (!slots.length) { cont.innerHTML = '<p class="text-sage">No slots found.</p>'; return; }
 
-        var grouped = {};
-        slots.forEach(s => { (grouped[s.slot_date] = grouped[s.slot_date] || []).push(s); });
+                var grouped = {};
+                slots.forEach(s => { (grouped[s.slot_date] = grouped[s.slot_date] || []).push(s); });
 
-        cont.innerHTML = Object.keys(grouped).sort().map(d => {
-            var dateStr = new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
-            var items   = grouped[d].map(s => {
-                var tags = (s.bookings || []).map(b =>
-                    `<span style="display:inline-flex;align-items:center;background:#ebf8ff;color:#2c5282;padding:.2rem .6rem;border-radius:1rem;font-size:.82rem;font-weight:600;margin:.2rem;">${b.name_init || b.last_name || 'Student'} <span style="margin-left:.4rem;font-weight:400;color:#718096;">${b.phone || ''}</span></span>`
-                ).join('') || '<span style="color:#cbd5e0;font-style:italic;">No bookings</span>';
-                return `<div style="background:#fff;border:1px solid var(--border);padding:.75rem;margin-bottom:.5rem;border-radius:.5rem;">
+                cont.innerHTML = Object.keys(grouped).sort().map(d => {
+                    var dateStr = new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                    var items = grouped[d].map(s => {
+                        var tags = (s.bookings || []).map(b =>
+                            `<span style="display:inline-flex;align-items:center;background:#ebf8ff;color:#2c5282;padding:.2rem .6rem;border-radius:1rem;font-size:.82rem;font-weight:600;margin:.2rem;">${b.name_init || b.last_name || 'Student'} <span style="margin-left:.4rem;font-weight:400;color:#718096;">${b.phone || ''}</span></span>`
+                        ).join('') || '<span style="color:#cbd5e0;font-style:italic;">No bookings</span>';
+                        return `<div style="background:#fff;border:1px solid var(--border);padding:.75rem;margin-bottom:.5rem;border-radius:.5rem;">
                     <div style="font-weight:700;margin-bottom:.4rem;">${s.display_time} <span class="badge badge-info" style="float:right">${vLabel(s.vehicle_id)}</span></div>
                     <div class="text-sm text-sage" style="margin-bottom:.4rem;">${s.booked_count}/${s.capacity} Booked</div>
                     <div>${tags}</div>
                 </div>`;
-            }).join('');
-            return `<div style="margin-bottom:1.5rem;"><h5 style="font-weight:700;color:var(--gold);margin-bottom:.5rem;">${dateStr}</h5>${items}</div>`;
-        }).join('');
-    } catch(e) { cont.innerHTML = `<p style="color:var(--danger)">Error: ${e.message}</p>`; }
-}
+                    }).join('');
+                    return `<div style="margin-bottom:1.5rem;"><h5 style="font-weight:700;color:var(--gold);margin-bottom:.5rem;">${dateStr}</h5>${items}</div>`;
+                }).join('');
+            } catch (e) { cont.innerHTML = `<p style="color:var(--danger)">Error: ${e.message}</p>`; }
+        }
 
-// ── EXAMS ─────────────────────────────────────────────────
-async function renderExamList() {
-    var search = document.getElementById('examSearch')?.value || '';
-    var cont   = document.getElementById('examListContainer');
-    try {
-        var rows = await CPTSA.Exams.list(search);
-        // Group by student
-        var byStudent = {};
-        rows.forEach(r => {
-            if (!byStudent[r.id]) byStudent[r.id] = { ...r, exams: [] };
-            byStudent[r.id].exams.push(r);
-        });
-        cont.innerHTML = Object.values(byStudent).map(s => {
-            var examRows = s.exams.map(e => {
-                var gc = v => v === 'pass' ? 'background:#c6f6d5;color:#22543d' : v === 'fail' ? 'background:#fed7d7;color:#742a2a' : '';
-                return `<tr>
+        // ── EXAMS ─────────────────────────────────────────────────
+        async function renderExamList() {
+            var search = document.getElementById('examSearch')?.value || '';
+            var cont = document.getElementById('examListContainer');
+            try {
+                var rows = await CPTSA.Exams.list(search);
+                // Group by student
+                var byStudent = {};
+                rows.forEach(r => {
+                    if (!byStudent[r.id]) byStudent[r.id] = { ...r, exams: [] };
+                    byStudent[r.id].exams.push(r);
+                });
+                cont.innerHTML = Object.values(byStudent).map(s => {
+                    var examRows = s.exams.map(e => {
+                        var gc = v => v === 'pass' ? 'background:#c6f6d5;color:#22543d' : v === 'fail' ? 'background:#fed7d7;color:#742a2a' : '';
+                        return `<tr>
                     <td colspan="2" style="background:#f7fafc;padding:.5rem;font-weight:700;">${e.vehicle_label || e.vehicle_id}</td>
                 </tr><tr>
                     <td style="font-size:.85rem;color:var(--sage);">Written</td>
                     <td><select class="exam-status-select" style="width:100%;${gc(e.written)}" onchange="updateExam(${s.id},'${e.vehicle_id}','written',this.value)">
-                        <option value="pending" ${e.written==='pending'?'selected':''}>Pending</option>
-                        <option value="pass" ${e.written==='pass'?'selected':''}>Pass</option>
-                        <option value="fail" ${e.written==='fail'?'selected':''}>Fail</option>
+                        <option value="pending" ${e.written === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="pass" ${e.written === 'pass' ? 'selected' : ''}>Pass</option>
+                        <option value="fail" ${e.written === 'fail' ? 'selected' : ''}>Fail</option>
                     </select></td>
                 </tr><tr>
                     <td style="font-size:.85rem;color:var(--sage);">Practical</td>
                     <td><select class="exam-status-select" style="width:100%;${gc(e.practical)}" onchange="updateExam(${s.id},'${e.vehicle_id}','practical',this.value)">
-                        <option value="pending" ${e.practical==='pending'?'selected':''}>Pending</option>
-                        <option value="pass" ${e.practical==='pass'?'selected':''}>Pass</option>
-                        <option value="fail" ${e.practical==='fail'?'selected':''}>Fail</option>
+                        <option value="pending" ${e.practical === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="pass" ${e.practical === 'pass' ? 'selected' : ''}>Pass</option>
+                        <option value="fail" ${e.practical === 'fail' ? 'selected' : ''}>Fail</option>
                     </select></td>
                 </tr><tr>
                     <td style="font-size:.85rem;color:var(--sage);">Exam Date</td>
-                    <td><input type="date" class="form-control" style="padding:.25rem;font-size:.9rem;" value="${e.exam_date||''}" onchange="updateExam(${s.id},'${e.vehicle_id}','date',this.value)"></td>
+                    <td><input type="date" class="form-control" style="padding:.25rem;font-size:.9rem;" value="${e.exam_date || ''}" onchange="updateExam(${s.id},'${e.vehicle_id}','date',this.value)"></td>
                 </tr>`;
-            }).join('');
-            return `<div class="exam-card"><h5>${s.name_init || s.last_name} <small style="font-weight:400;color:var(--sage);">(${s.nic})</small></h5>
+                    }).join('');
+                    return `<div class="exam-card"><h5>${s.name_init || s.last_name} <small style="font-weight:400;color:var(--sage);">(${s.nic})</small></h5>
                 <table style="width:100%;border-collapse:collapse;"><tbody>${examRows}</tbody></table></div>`;
-        }).join('') || '<p class="text-sage">No students found.</p>';
-    } catch(e) { cont.innerHTML = `<p style="color:var(--danger)">Error: ${e.message}</p>`; }
-}
+                }).join('') || '<p class="text-sage">No students found.</p>';
+            } catch (e) { cont.innerHTML = `<p style="color:var(--danger)">Error: ${e.message}</p>`; }
+        }
 
-async function updateExam(studentId, vehicleId, field, value) {
-    var data = { student_id: studentId, vehicle_id: vehicleId };
-    if (field === 'date')     data.exam_date  = value;
-    else if (field === 'written')   data.written   = value;
-    else if (field === 'practical') data.practical = value;
-    try {
-        await CPTSA.Exams.update(data);
-        showToast('Result updated.');
-        // re-render to update select colours
-        renderExamList();
-    } catch(e) { showToast('Error: ' + e.message); }
-}
+        async function updateExam(studentId, vehicleId, field, value) {
+            var data = { student_id: studentId, vehicle_id: vehicleId };
+            if (field === 'date') data.exam_date = value;
+            else if (field === 'written') data.written = value;
+            else if (field === 'practical') data.practical = value;
+            try {
+                await CPTSA.Exams.update(data);
+                showToast('Result updated.');
+                // re-render to update select colours
+                renderExamList();
+            } catch (e) { showToast('Error: ' + e.message); }
+        }
 
-// ── MESSAGES ─────────────────────────────────────────────
-var allStudentsForMsg = [];
+        // ── MESSAGES ─────────────────────────────────────────────
+        var allStudentsForMsg = [];
 
-async function populateRecipients() {
-    var filter = document.getElementById('msgVehicleFilter')?.value || '';
-    try {
-        allStudentsForMsg = await CPTSA.Students.list();
-        var filtered = filter
-            ? allStudentsForMsg.filter(s => (s.vehicles || []).includes(filter) && s.status === 'active')
-            : allStudentsForMsg.filter(s => s.status === 'active');
+        async function populateRecipients() {
+            var filter = document.getElementById('msgVehicleFilter')?.value || '';
+            try {
+                allStudentsForMsg = await CPTSA.Students.list();
+                var filtered = filter
+                    ? allStudentsForMsg.filter(s => (s.vehicles || []).includes(filter) && s.status === 'active')
+                    : allStudentsForMsg.filter(s => s.status === 'active');
 
-        document.getElementById('recipientPool').innerHTML = filtered.map(s =>
-            `<label class="checkbox-item" style="font-size:.9rem;">
+                document.getElementById('recipientPool').innerHTML = filtered.map(s =>
+                    `<label class="checkbox-item" style="font-size:.9rem;">
                 <input type="checkbox" class="msg-cb" value="${s.id}">
                 ${s.name_init || s.last_name} (${s.nic || s.phone})
              </label>`
-        ).join('');
-    } catch {}
-}
+                ).join('');
+            } catch { }
+        }
 
-function selectAllRecipients() { document.querySelectorAll('.msg-cb').forEach(cb => cb.checked = true); }
-function clearRecipients()     { document.querySelectorAll('.msg-cb').forEach(cb => cb.checked = false); }
+        function selectAllRecipients() { document.querySelectorAll('.msg-cb').forEach(cb => cb.checked = true); }
+        function clearRecipients() { document.querySelectorAll('.msg-cb').forEach(cb => cb.checked = false); }
 
-function updatePreview() {
-    document.getElementById('previewTitle').textContent = document.getElementById('msgTitle').value || 'Message Title';
-    document.getElementById('previewBody').textContent  = document.getElementById('msgBody').value  || 'Content here…';
-}
+        function updatePreview() {
+            document.getElementById('previewTitle').textContent = document.getElementById('msgTitle').value || 'Message Title';
+            document.getElementById('previewBody').textContent = document.getElementById('msgBody').value || 'Content here…';
+        }
 
-async function sendMessage() {
-    var title = document.getElementById('msgTitle').value.trim();
-    var body  = document.getElementById('msgBody').value.trim();
-    var rcpts = Array.from(document.querySelectorAll('.msg-cb:checked')).map(cb => parseInt(cb.value));
-    if (!title || !body) { showToast('Title and body required.'); return; }
-    if (!rcpts.length)   { showToast('Select at least one recipient.'); return; }
-    try {
-        var res = await CPTSA.Messages.send({ title, body, recipients: rcpts });
-        document.getElementById('msgSuccess').style.display = 'block';
-        document.getElementById('msgTitle').value = '';
-        document.getElementById('msgBody').value  = '';
-        clearRecipients();
-        updatePreview();
-        setTimeout(() => { document.getElementById('msgSuccess').style.display = 'none'; }, 3000);
-        showToast(`✅ Sent to ${res.recipient_count} students.`);
-    } catch(e) { showToast('Error: ' + e.message); }
-}
+        async function sendMessage() {
+            var title = document.getElementById('msgTitle').value.trim();
+            var body = document.getElementById('msgBody').value.trim();
+            var rcpts = Array.from(document.querySelectorAll('.msg-cb:checked')).map(cb => parseInt(cb.value));
+            if (!title || !body) { showToast('Title and body required.'); return; }
+            if (!rcpts.length) { showToast('Select at least one recipient.'); return; }
+            try {
+                var res = await CPTSA.Messages.send({ title, body, recipients: rcpts });
+                document.getElementById('msgSuccess').style.display = 'block';
+                document.getElementById('msgTitle').value = '';
+                document.getElementById('msgBody').value = '';
+                clearRecipients();
+                updatePreview();
+                setTimeout(() => { document.getElementById('msgSuccess').style.display = 'none'; }, 3000);
+                showToast(`✅ Sent to ${res.recipient_count} students.`);
+            } catch (e) { showToast('Error: ' + e.message); }
+        }
 
-// ── VEHICLES ─────────────────────────────────────────────
-async function renderVehicleTable() {
-    try {
-        vehicleList = await CPTSA.Vehicles.list();
-        vehicleList.forEach(v => { vehicleMap[v.id] = v.label; });
-        document.getElementById('vehicleTableBody').innerHTML = vehicleList.map(v =>
-            `<tr>
+        // ── VEHICLES ─────────────────────────────────────────────
+        async function renderVehicleTable() {
+            try {
+                vehicleList = await CPTSA.Vehicles.list();
+                vehicleList.forEach(v => { vehicleMap[v.id] = v.label; });
+                document.getElementById('vehicleTableBody').innerHTML = vehicleList.map(v =>
+                    `<tr>
                 <td style="font-family:monospace;font-weight:700;">${v.id}</td>
                 <td>${v.label}</td>
                 <td>${v.is_default ? '<span class="text-sage text-xs">System Default</span>' : `<button class="btn btn-danger btn-sm" onclick="deleteVehicle('${v.id}')">Delete</button>`}</td>
             </tr>`
-        ).join('');
-        populateVehicleDropdowns();
-    } catch(e) { showToast('Error loading vehicles: ' + e.message); }
-}
+                ).join('');
+                populateVehicleDropdowns();
+            } catch (e) { showToast('Error loading vehicles: ' + e.message); }
+        }
 
-async function addVehicle() {
-    var code  = document.getElementById('newVehCode').value.trim().toLowerCase();
-    var label = document.getElementById('newVehLabel').value.trim();
-    if (!code || !label) { showToast('Code and label required.'); return; }
-    try {
-        await CPTSA.Vehicles.create({ id: code, label });
-        document.getElementById('newVehCode').value = '';
-        document.getElementById('newVehLabel').value = '';
-        showToast('Vehicle added.');
-        renderVehicleTable();
-    } catch(e) { showToast('Error: ' + e.message); }
-}
+        async function addVehicle() {
+            var code = document.getElementById('newVehCode').value.trim().toLowerCase();
+            var label = document.getElementById('newVehLabel').value.trim();
+            if (!code || !label) { showToast('Code and label required.'); return; }
+            try {
+                await CPTSA.Vehicles.create({ id: code, label });
+                document.getElementById('newVehCode').value = '';
+                document.getElementById('newVehLabel').value = '';
+                showToast('Vehicle added.');
+                renderVehicleTable();
+            } catch (e) { showToast('Error: ' + e.message); }
+        }
 
-async function deleteVehicle(id) {
-    if (!confirm('Remove this vehicle category?')) return;
-    try {
-        await CPTSA.Vehicles.delete(id);
-        showToast('Vehicle removed.');
-        renderVehicleTable();
-    } catch(e) { showToast('Error: ' + e.message); }
-}
+        async function deleteVehicle(id) {
+            if (!confirm('Remove this vehicle category?')) return;
+            try {
+                await CPTSA.Vehicles.delete(id);
+                showToast('Vehicle removed.');
+                renderVehicleTable();
+            } catch (e) { showToast('Error: ' + e.message); }
+        }
 
-// ── INIT ─────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        var session = await CPTSA.Auth.session();
-        if (session && session.role === 'admin') await showPortal();
-    } catch {}
-});
-</script>
+        // ── INIT ─────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                var session = await CPTSA.Auth.session();
+                if (session && session.role === 'admin') await showPortal();
+            } catch { }
+        });
+    </script>
 </body>
+
 </html>
