@@ -4,9 +4,9 @@
 -- mysql -u root -p < schema.sql
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS cptsa_driving
+/* CREATE DATABASE IF NOT EXISTS cptsa_driving
     CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE cptsa_driving;
+USE cptsa_driving; */
 
 -- ──────────────────────────────────────────────────────────
 -- 1. VEHICLE CATEGORIES

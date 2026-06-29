@@ -9,11 +9,18 @@
 //   DB_NAME = 'cptsa_driving'
 // ============================================================
 
-define('DB_HOST',    'localhost');
-define('DB_PORT',    '3306');
-define('DB_NAME',    'cptsa_driving');
-define('DB_USER',    'root');       // XAMPP default username
-define('DB_PASS',    '');           // XAMPP default: no password
+// define('DB_HOST',    'localhost');
+// define('DB_PORT',    '3306');
+// define('DB_NAME',    'cptsa_driving');
+// define('DB_USER',    'root');       // XAMPP default username
+// define('DB_PASS',    '');           // XAMPP default: no password
+// define('DB_CHARSET', 'utf8mb4');
+
+define('DB_HOST', 'sql202.infinityfree.com');
+define('DB_PORT', '3306');
+define('DB_NAME', 'if0_42298002_cptsa_database');
+define('DB_USER', 'if0_42298002');
+define('DB_PASS', 'C9BaUiJQAkpgjR');  // ← your actual vPanel password
 define('DB_CHARSET', 'utf8mb4');
 
 // ── Upload paths ─────────────────────────────────────────
@@ -31,12 +38,16 @@ define('MAX_PHOTO_SIZE', 2  * 1024 * 1024);   // 2 MB
 define('MAX_DOC_SIZE',   10 * 1024 * 1024);   // 10 MB
 
 // ── PDO connection (singleton) ───────────────────────────
-function getDB(): PDO {
+function getDB(): PDO
+{
     static $pdo = null;
     if ($pdo === null) {
         $dsn = sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=%s',
-            DB_HOST, DB_PORT, DB_NAME, DB_CHARSET
+            DB_HOST,
+            DB_PORT,
+            DB_NAME,
+            DB_CHARSET
         );
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -51,7 +62,7 @@ function getDB(): PDO {
             echo json_encode([
                 'success' => false,
                 'error'   => 'Database connection failed. Check config/database.php — '
-                           . $e->getMessage()
+                    . $e->getMessage()
             ]);
             exit;
         }
